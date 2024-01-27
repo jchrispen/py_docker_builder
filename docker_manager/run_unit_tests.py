@@ -1,10 +1,14 @@
+#!/usr/bin/env python3
+
 import unittest
-from test_docker_config import TestDockerConfig  # Import your test classes
+# Import your test classes
+from test_docker_config import TestDockerConfig
 from test_docker_container_manager import TestDockerContainerManager
 from test_docker_dependency_checker import TestDockerDependencyChecker
 from test_docker_image_builder import TestDockerImageBuilder
 from test_docker_service_manager import TestDockerServiceManager
 from test_docker_utility import TestDockerUtility
+
 
 def suite():
     suite = unittest.TestSuite()
