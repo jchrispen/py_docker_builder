@@ -130,6 +130,7 @@ RUN  set -x \
 
 #*-------------------------------------------------------------------
 # Stage 5: Final image
+# keep as flat as possible to limit layers
 FROM base_image as final_production
 
 # redeclare ARG variables
