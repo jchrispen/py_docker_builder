@@ -69,7 +69,7 @@ else
     IMAGE_TAG="arbitrage-bot:${TIMESTAMP}-${GIT_COMMIT_HASH}"
 fi
 
-# build image
+# build docker image
 docker buildx build -t "${IMAGE_TAG}" . || error_exit "Docker build failed."
 # create container
 docker create -it --name bot-"${TIMESTAMP}" "${IMAGE_TAG}" || error_exit "Failed to create Docker container."
