@@ -1,6 +1,6 @@
 import os
 import shutil
-from docker_manager.docker_service_manager import DockerServiceManager
+from docker_service_manager import DockerServiceManager
 
 
 class DockerDependencyChecker:
