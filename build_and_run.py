@@ -5,7 +5,6 @@ from docker_manager.docker_config import DockerConfig
 from docker_manager.docker_container_manager import DockerContainerManager
 from docker_manager.docker_dependency_checker import DockerDependencyChecker
 from docker_manager.docker_image_builder import DockerImageBuilder
-from docker_manager.docker_service_manager import DockerServiceManager
 
 
 def main():
@@ -18,14 +17,11 @@ def main():
     # Initialize the new classes
     docker_config = DockerConfig(config_path)
     dependency_checker = DockerDependencyChecker(docker_config)
-    service_manager = DockerServiceManager(docker_config)
     image_builder = DockerImageBuilder(docker_config)
     container_manager = DockerContainerManager(docker_config)
 
     # Get ready to work
     dependency_checker.prepare_environment()
-    if not service_manager.is_docker_running():
-        service_manager.start_docker()
 
     # do work
     image_name_tag = image_builder.build_image()

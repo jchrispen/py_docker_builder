@@ -1,5 +1,6 @@
 import os
 import shutil
+from docker_manager.docker_service_manager import DockerServiceManager
 
 
 class DockerDependencyChecker:
@@ -37,6 +38,8 @@ class DockerDependencyChecker:
         try:
             self._check_dependencies()
             self._check_required_files()
+            if not DockerServiceManager.is_docker_running():
+                DockerServiceManager.start_docker()
             # Additional setup or checks can go here
         except Exception as e:
             print(e)
