@@ -2,6 +2,7 @@ import subprocess
 
 
 class DockerServiceManager:
+
     @staticmethod
     def is_docker_running():
         """Internal method to check if the Docker service running."""

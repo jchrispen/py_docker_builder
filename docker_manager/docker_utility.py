@@ -3,6 +3,7 @@ import subprocess
 
 
 class DockerUtility:
+
     @staticmethod
     def run_command_with_output(command, error_message, check=True, log_file=None):
         """A specific wrapper to ensure output streaming."""

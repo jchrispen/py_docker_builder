@@ -4,6 +4,7 @@ from docker_manager.docker_service_manager import DockerServiceManager
 
 
 class DockerDependencyChecker:
+
     def __init__(self, config):
         self.config = config
 

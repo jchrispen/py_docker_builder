@@ -2,6 +2,7 @@ from docker_manager.docker_utility import DockerUtility
 
 
 class DockerImageBuilder:
+
     def __init__(self, config):
         self.config = config
 

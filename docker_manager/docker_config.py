@@ -2,6 +2,7 @@ import json
 
 
 class DockerConfig:
+
     def __init__(self, config_path):
         self.config = self.load_config(config_path)
 
