@@ -1,7 +1,7 @@
 {
   "dependencies": ["docker", "service", "date", "git"],
   "required_files": ["Dockerfile", ".env"],
-  "log_file_path": "build_log.txt",
+  "log_file_path": "log.txt",
   "image_name": "arbitrage-bot",
   "tag_format": "%Y%m%d-%H%M%S",
   "container_name": "bot"
