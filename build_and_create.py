@@ -14,7 +14,8 @@ EXIT_SUCCESS = 0
 EXIT_FAIL = 1
 
 def init_parser():
-    parser = argparse.ArgumentParser(description="Docker Management Script")
+    _description="Arbitrage-Bot Docker Management Script"
+    parser = argparse.ArgumentParser(description=_description)
     parser.add_argument("-c", "--config", required=True, help="Path to the configuration file")
     parser.add_argument("-v", "--verbose", action='store_true', help="Enable output")
     parser.add_argument("-l", "--logging", action='store_true', help="Enable logging")
