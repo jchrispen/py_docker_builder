@@ -18,8 +18,6 @@ class DockerDependencyChecker:
 
         if missing_dependencies:
             raise Exception(f"Missing dependencies: {', '.join(missing_dependencies)}")
-        else:
-            print("All dependencies are satisfied.")
 
     def _check_required_files(self):
         """Internal method to check for required files."""
@@ -27,12 +25,10 @@ class DockerDependencyChecker:
         missing_files = []
         for file in required_files:
             if not os.path.isfile(file):  # Using shutil.which to check for command availability
-                missing_files.append(dep)
+                missing_files.append(file)
 
         if missing_files:
             raise Exception(f"Missing required files: {', '.join(missing_files)}")
-        else:
-            print("All required files are satisfied.")
 
     def prepare_environment(self):
         """Public method that gets the env ready."""

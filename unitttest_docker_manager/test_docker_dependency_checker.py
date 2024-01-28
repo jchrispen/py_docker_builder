@@ -2,6 +2,7 @@
 
 import unittest
 from unittest.mock import patch, MagicMock
+import json
 import sys
 import os
 sys.path.append(os.path.abspath('../'))
@@ -11,12 +12,22 @@ from docker_manager.docker_dependency_checker import DockerDependencyChecker
 class TestDockerDependencyChecker(unittest.TestCase):
 
     def setUp(self):
-        # Mock configuration
-        self.mock_config = {
-            'dependencies': ['docker', 'git'],
-            'required_files': ['/path/to/required_file1', '/path/to/required_file2']
+        # Example JSON string for configuration
+        json_config = '''
+        {
+            "dependencies": ["docker", "git"],
+            "required_files": ["/path/to/required_file1", "/path/to/required_file2"]
         }
-        self.dependency_checker = DockerDependencyChecker(self.mock_config)
+        '''
+        # Parse JSON string to dictionary
+        self.mock_config = json.loads(json_config)
+
+        # Set up MagicMock to return values from the dictionary
+        mock_config = MagicMock()
+        mock_config.get_config_value.side_effect = lambda key: self.mock_config.get(key)
+
+        # Create an instance of DockerDependencyChecker with the mocked config
+        self.dependency_checker = DockerDependencyChecker(mock_config)
 
     @patch('shutil.which')
     def test_check_dependencies_all_present(self, mock_which):
