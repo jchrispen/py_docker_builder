@@ -16,8 +16,8 @@ def suite():
     suite.addTest(unittest.makeSuite(TestDockerContainerManager))
     suite.addTest(unittest.makeSuite(TestDockerDependencyChecker))
     suite.addTest(unittest.makeSuite(TestDockerImageBuilder))
-#     suite.addTest(unittest.makeSuite(TestDockerServiceManager))
-#     suite.addTest(unittest.makeSuite(TestDockerUtility))
+    suite.addTest(unittest.makeSuite(TestDockerServiceManager))
+    suite.addTest(unittest.makeSuite(TestDockerUtility))
     return suite
 
 if __name__ == '__main__':

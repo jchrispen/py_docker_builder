@@ -5,15 +5,15 @@ import subprocess
 class DockerUtility:
 
     @staticmethod
-    def run_command_with_output(command, error_message, check=True, log_file_path=None):
+    def run_command_with_output(command, error_message, log_file_path=None):
         """A specific wrapper to ensure output streaming."""
-        DockerUtility.run_command(command, error_message, check, log_file_path, stream_output=True)
+        DockerUtility.run_command(command=command, error_message=error_message, check=True, stream_output=True, log_file_path=log_file_path)
 
     @staticmethod
     def run_command(command, error_message, check=True, stream_output=False, log_file_path=None):
         process = subprocess.Popen(command, shell=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         if log_file_path:
-            with open(log_file, 'w') as file:
+            with open(log_file_path, 'w') as file:
                 for output_line in process.stdout:
                     line = output_line.decode() if isinstance(output_line, bytes) else output_line
                     print(line.strip())
