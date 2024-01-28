@@ -2,12 +2,12 @@
 
 import unittest
 # Import your test classes
-from test_docker_config import TestDockerConfig
-from test_docker_container_manager import TestDockerContainerManager
-from test_docker_dependency_checker import TestDockerDependencyChecker
-from test_docker_image_builder import TestDockerImageBuilder
-from test_docker_service_manager import TestDockerServiceManager
-from test_docker_utility import TestDockerUtility
+from docker_manager_tests.test_docker_config import TestDockerConfig
+from docker_manager_tests.test_docker_container_manager import TestDockerContainerManager
+from docker_manager_tests.test_docker_dependency_checker import TestDockerDependencyChecker
+from docker_manager_tests.test_docker_image_builder import TestDockerImageBuilder
+from docker_manager_tests.test_docker_service_manager import TestDockerServiceManager
+from docker_manager_tests.test_docker_utility import TestDockerUtility
 
 
 def suite():

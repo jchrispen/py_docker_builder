@@ -2,7 +2,11 @@
 
 import unittest
 from unittest.mock import patch, MagicMock
-from docker_dependency_checker import DockerDependencyChecker
+import sys
+import os
+sys.path.append(os.path.abspath('../'))
+from docker_manager.docker_dependency_checker import DockerDependencyChecker
+
 
 class TestDockerDependencyChecker(unittest.TestCase):
 

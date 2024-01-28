@@ -1,4 +1,4 @@
-from docker_utility import DockerUtility
+from docker_manager.docker_utility import DockerUtility
 
 
 class DockerImageBuilder:

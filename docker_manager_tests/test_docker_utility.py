@@ -2,7 +2,11 @@
 
 import unittest
 from unittest.mock import patch, MagicMock
-from docker_utility import DockerUtility
+import sys
+import os
+sys.path.append(os.path.abspath('../'))
+from docker_manager.docker_utility import DockerUtility
+
 
 class TestDockerUtility(unittest.TestCase):
 

@@ -2,8 +2,11 @@
 
 import unittest
 import json
+import sys
 import os
-from docker_config import DockerConfig
+sys.path.append(os.path.abspath('../'))
+from docker_manager.docker_config import DockerConfig
+
 
 class TestDockerConfig(unittest.TestCase):
 
