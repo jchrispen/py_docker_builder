@@ -30,4 +30,4 @@ class DockerContainerManager:
         # do work
         print(f"Creating Docker container with tag: {container_name_tag}, logging to: {log_file_path}")
         # create the docker container
-        DockerUtility.run_command_with_output(docker_create_command, error_msg, log_file=log_file_path)
+        DockerUtility.run_command_with_output(docker_create_command, error_msg, log_file_path)
