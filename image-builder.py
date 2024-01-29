@@ -16,10 +16,10 @@ EXIT_FAIL = 1
 def init_parser():
     _description="Arbitrage-Bot Docker Management Script"
     parser = argparse.ArgumentParser(description=_description)
-    parser.add_argument("-c", "--config", required=True, help="Path to the configuration file")
+    parser.add_argument("-c", "--config", help="Path to the configuration file")
     parser.add_argument("-v", "--verbose", action='store_true', help="Enable output")
     parser.add_argument("-l", "--logging", action='store_true', help="Enable logging")
-    parser.add_argument("--build-image", action='store_true', help="Build Docker image")
+    parser.add_argument("--build-image", nargs='?', const='Dockerfile', help="Build Docker image, optionally specify a Dockerfile path")
     parser.add_argument("--create-container", action='store_true', help="Create Docker container")
     parser.add_argument('--run-tests', action='store_true', help='Run unit tests')
     return parser
@@ -28,38 +28,46 @@ def main():
     parser = init_parser()
     args = parser.parse_args()
 
-    try: # to open the config file
-        with open(args.config, 'r') as config_file:
-            config_json = json.load(config_file)
-    except Exception as e:
-        print(f"Error reading config file: {e}")
+    # Check if --config is provided when --run-tests is not flagged
+    if not args.run_tests and not args.config:
+        print("Error: --config is required if not running tests")
         sys.exit(EXIT_FAIL)
 
-    config_json['verbose'] = args.verbose
-    config_json['logging'] = args.logging
+    if args.config:
+        try:
+            with open(args.config, 'r') as config_file:
+                config_json = json.load(config_file)
+            config_json['verbose'] = args.verbose
+            config_json['logging'] = args.logging
+            if args.build_image and isinstance(args.build_image, str):
+                config_json['dockerfile'] = args.build_image
+        except Exception as e:
+            print(f"Error reading config file: {e}")
+            sys.exit(EXIT_FAIL)
 
     try:
-        # init the module
-        docker_config = DockerConfig(config_dict=config_json)
-        dependency_checker = DockerDependencyChecker(docker_config)
-        dependency_checker.prepare_environment()
+        if not args.run_tests:
+            # init the module
+            docker_config = DockerConfig(config_dict=config_json)
+            dependency_checker = DockerDependencyChecker(docker_config)
+            dependency_checker.prepare_environment()
 
-        image_name_tag = None
-        if args.build_image or args.create_container:
-            image_builder = DockerImageBuilder(docker_config)
-            image_name_tag = image_builder.build_image()
+            image_name_tag = None
+            if args.build_image or args.create_container:
+                image_builder = DockerImageBuilder(docker_config)
+                image_name_tag = image_builder.build_image()
 
-            if image_name_tag is not None:
-                print("Docker image built successfully.")
+                if image_name_tag is not None:
+                    print("Docker image built successfully.")
 
-        if args.create_container:
-            if image_name_tag is not None:
-                container_manager = DockerContainerManager(docker_config)
-                container_manager.create_container(image_name_tag)
-                print("Docker container created successfully.")
-            else:
-                print("Error: Docker image needs to be built before creating a container.")
-                sys.exit(EXIT_FAIL)
+            if args.create_container:
+                if image_name_tag is not None:
+                    container_manager = DockerContainerManager(docker_config)
+                    container_manager.create_container(image_name_tag)
+                    print("Docker container created successfully.")
+                else:
+                    print("Error: Docker image needs to be built before creating a container.")
+                    sys.exit(EXIT_FAIL)
 
         if args.run_tests:
             test_suite = DockerTestSuite()

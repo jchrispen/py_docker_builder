@@ -20,7 +20,8 @@ class DockerImageBuilder:
         format = self.config.get_config_value('tag_format')
         image_tag = DockerUtility.create_tag(format)
         image_name_tag = f"{image_name}:{image_tag}"
-        docker_build_command = f"docker buildx build -t {image_name_tag} ."
+        dockerfile = self.config.get_config_value('dockerfile')
+        docker_build_command = f"docker buildx build --tag {image_name_tag} --file {dockerfile} ."
         error_msg = "Docker build failed."
 
         # do work
