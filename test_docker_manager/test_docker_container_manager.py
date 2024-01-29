@@ -29,7 +29,7 @@ class TestDockerContainerManager(unittest.TestCase):
         mock_run_command.return_value = None  # Simulate successful command execution
         self.docker_container_manager.create_container('image_name:tag')
         expected_command = "docker create -it --name test_container-tag image_name:tag"
-        mock_run_command.assert_called_with(expected_command, "Failed to create Docker container.", log_file='test.log')
+        mock_run_command.assert_called_with(expected_command, "Failed to create Docker container.", 'test.log')
 
     # Additional tests can be added for failure scenarios and edge cases
 

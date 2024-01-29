@@ -15,8 +15,8 @@ class TestDockerDependencyChecker(unittest.TestCase):
         # Example JSON string for configuration
         json_config = '''
         {
-            "dependencies": ["docker", "git"],
-            "required_files": ["/path/to/required_file1", "/path/to/required_file2"]
+            "os_dependencies": ["docker", "git"],
+            "required_config_files": ["/path/to/required_file1", "/path/to/required_file2"]
         }
         '''
         # Parse JSON string to dictionary

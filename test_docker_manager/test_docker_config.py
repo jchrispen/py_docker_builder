@@ -28,8 +28,9 @@ class TestDockerConfig(unittest.TestCase):
 
     def test_load_config_failure(self):
         # Test failure to load configuration from a non-existent file
-        with self.assertRaises(FileNotFoundError):
+        with self.assertRaises(ValueError) as context:
             DockerConfig('non_existent_config.json')
+        self.assertIn("Error loading configuration from file", str(context.exception))
 
     def test_get_config_value_existing_key(self):
         # Test retrieving an existing configuration value

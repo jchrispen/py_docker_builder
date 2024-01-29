@@ -17,6 +17,7 @@ class TestDockerImageBuilder(unittest.TestCase):
         json_config = '''
         {
             "log_file_path": "test.log",
+            "dockerfile": "Dockerfile",
             "image_name": "test_image",
             "tag_format": "%Y%m%d-%H%M%S"
         }
@@ -47,7 +48,7 @@ class TestDockerImageBuilder(unittest.TestCase):
         mock_run_command.return_value = None  # Simulate successful command execution
         log_file_path = self.mock_config.get("log_file_path")
         self.image_builder.build_image()
-        expected_command = "docker buildx build -t test_image:latest ."
+        expected_command = "docker buildx build --tag test_image:latest --file Dockerfile ."
         mock_run_command.assert_called_with(expected_command, "Docker build failed.", log_file_path)
 
     # Additional tests can be added for failure scenarios
