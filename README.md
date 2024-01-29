@@ -53,8 +53,12 @@ optional arguments:
 ## File Structure
 ```
 .
-├── config.json
-├── Dockerfile
+├── image-builder
+├── run_unit_tests
+├── config_files
+│   ├── .env
+│   ├── config.json
+│   ├── Dockerfile
 ├── docker_manager
 │   ├── init.py
 │   ├── docker_config.py
@@ -63,8 +67,6 @@ optional arguments:
 │   ├── docker_image_builder.py
 │   ├── docker_service_manager.py
 │   └── docker_utility.py
-├── image-builder
-├── run_unit_tests.py
 └── unittest_docker_manager 
     ├── __init__.py
     ├── test_docker_config.py

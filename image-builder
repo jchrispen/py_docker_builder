@@ -7,7 +7,7 @@ from docker_manager.docker_config import DockerConfig
 from docker_manager.docker_container_manager import DockerContainerManager
 from docker_manager.docker_dependency_checker import DockerDependencyChecker
 from docker_manager.docker_image_builder import DockerImageBuilder
-
+import test_docker_manager.run_unit_tests
 
 # Define exit status constants
 EXIT_SUCCESS = 0
@@ -21,6 +21,7 @@ def init_parser():
     parser.add_argument("-l", "--logging", action='store_true', help="Enable logging")
     parser.add_argument("--build-image", action='store_true', help="Build Docker image")
     parser.add_argument("--create-container", action='store_true', help="Create Docker container")
+    parser.add_argument('--run-tests', action='store_true', help='Run unit tests')
     return parser
 
 def main():
@@ -59,6 +60,9 @@ def main():
             else:
                 print("Error: Docker image needs to be built before creating a container.")
                 sys.exit(EXIT_FAIL)
+
+        if args.run_tests:
+            run_unit_tests.main()  # Call the main function of run_unit_tests
 
     except Exception as e:
         print(f"Error during Docker operations: {e}")

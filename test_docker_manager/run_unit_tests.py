@@ -2,12 +2,12 @@
 
 import unittest
 # Import your test classes
-from unittest_docker_manager.test_docker_config import TestDockerConfig
-from unittest_docker_manager.test_docker_container_manager import TestDockerContainerManager
-from unittest_docker_manager.test_docker_dependency_checker import TestDockerDependencyChecker
-from unittest_docker_manager.test_docker_image_builder import TestDockerImageBuilder
-from unittest_docker_manager.test_docker_service_manager import TestDockerServiceManager
-from unittest_docker_manager.test_docker_utility import TestDockerUtility
+from test_docker_config import TestDockerConfig
+from test_docker_container_manager import TestDockerContainerManager
+from test_docker_dependency_checker import TestDockerDependencyChecker
+from test_docker_image_builder import TestDockerImageBuilder
+from test_docker_service_manager import TestDockerServiceManager
+from test_docker_utility import TestDockerUtility
 
 
 def suite():
@@ -20,6 +20,9 @@ def suite():
     suite.addTest(unittest.makeSuite(TestDockerUtility))
     return suite
 
-if __name__ == '__main__':
+def main():
     runner = unittest.TextTestRunner()
     runner.run(suite())
+
+if __name__ == '__main__':
+    main()
