@@ -30,17 +30,17 @@ def main():
 
     try: # to open the config file
         with open(args.config, 'r') as config_file:
-            config_dict = json.load(config_file)
+            config_json = json.load(config_file)
     except Exception as e:
         print(f"Error reading config file: {e}")
         sys.exit(EXIT_FAIL)
 
-    config_dict['verbose'] = args.verbose
-    config_dict['logging'] = args.logging
+    config_json['verbose'] = args.verbose
+    config_json['logging'] = args.logging
 
     try:
         # init the module
-        docker_config = DockerConfig(config_dict=config_dict)
+        docker_config = DockerConfig(config_dict=config_json)
         dependency_checker = DockerDependencyChecker(docker_config)
         dependency_checker.prepare_environment()
 
