@@ -7,7 +7,7 @@ from docker_manager.docker_config import DockerConfig
 from docker_manager.docker_container_manager import DockerContainerManager
 from docker_manager.docker_dependency_checker import DockerDependencyChecker
 from docker_manager.docker_image_builder import DockerImageBuilder
-import test_docker_manager.run_unit_tests
+from test_docker_manager.docker_test_suite import DockerTestSuite
 
 # Define exit status constants
 EXIT_SUCCESS = 0
@@ -62,7 +62,8 @@ def main():
                 sys.exit(EXIT_FAIL)
 
         if args.run_tests:
-            run_unit_tests.main()  # Call the main function of run_unit_tests
+            test_suite = DockerTestSuite()
+            test_suite.run()
 
     except Exception as e:
         print(f"Error during Docker operations: {e}")

@@ -36,8 +36,8 @@ Details on how to modify `config.json` for custom settings.
 Instructions on how to run the project, including commands and any necessary arguments or flags.
 
 ```bash
-./image-builder --help
-usage: image-builder [-h] -c CONFIG [-v] [-l] [--build-image] [--create-container]
+./image-builder.py --help
+usage: image-builder.py [-h] -c CONFIG [-v] [-l] [--build-image] [--create-container]
 
 Arbitrage-Bot Docker Management Script
 
@@ -123,7 +123,7 @@ The project includes a suite of unit tests to ensure the reliability and correct
 To run the unit tests, execute the `run_unit_tests.py` script from the project root directory:
 
 ```bash
-./run_unit_tests.py
+./docker_test_suite.py
 ```
 
 This script will automatically discover and run all test cases in the `unittest_docker_manager` directory, including tests for Docker configuration, container management, dependency checking, image building, service management, and utility functions.
