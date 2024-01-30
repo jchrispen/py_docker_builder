@@ -1,7 +1,7 @@
 {
   "os_dependencies": ["docker", "service", "date", "git"],
   "config_files_dir": "config_files",
-  "required_config_files": ["Dockerfile", ".env"],
+  "required_config_files": [],
   "image_name": "arbitrage-bot",
   "container_name": "bot",
   "tag_format": "%Y%m%d-%H%M%S"

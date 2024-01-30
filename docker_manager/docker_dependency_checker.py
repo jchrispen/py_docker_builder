@@ -27,12 +27,20 @@ class DockerDependencyChecker:
         config_dir = self.config.get_config_value(self.config_files_dir)
         required_files = self.config.get_config_value(self.required_config_files)
         missing_files = []
+
         for file in required_files:
-            if not os.path.isfile(f"{config_dir}/{file}"):  # Using shutil.which to check for command availability
+            # Check if the file already starts with config_dir and adjust accordingly
+            if file.startswith(config_dir):
+                req_file = file
+            else:
+                req_file = os.path.join(config_dir, file)
+
+            print(f'{file} : {req_file}')
+            if not os.path.isfile(req_file):
                 missing_files.append(file)
 
         if missing_files:
-            raise Exception(f"Missing required files: {', '.join(missing_files)}")
+            raise FileNotFoundError(f"Missing required files: {', '.join(missing_files)}")
 
     def prepare_environment(self):
         """Public method that gets the env ready."""
