@@ -13,7 +13,6 @@ class DockerServiceManager:
     @staticmethod
     def start_docker():
         """Internal method to start the Docker service."""
-        print("Docker is not running, attempting to start Docker...")
         result = subprocess.run(['sudo', 'service', 'docker', 'start'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
         if result.returncode != 0:
             raise Exception(f"Failed to start Docker. Error: {result.stderr}")

@@ -106,7 +106,7 @@ def main():
         print(f'Error during Docker operations: {e}')
         sys.exit(EX_FAIL)
 
-    print('Docker build and create script completed successfully.')
+    print('Docker build and create script completed')
     sys.exit(EX_OK)
 
 

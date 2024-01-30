@@ -24,8 +24,6 @@ class DockerImageBuilder:
         docker_build_command = f"docker buildx build --tag {image_name_tag} --file {dockerfile} ."
         error_msg = "Docker build failed."
 
-        # do work
-        print(f"Building Docker image with tag: {image_name_tag}, logging to: {log_file_path}")
         # build the docker image
         DockerUtility.run_command_with_output(docker_build_command, error_msg, log_file_path)
         return image_name_tag
