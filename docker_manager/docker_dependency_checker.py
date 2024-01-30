@@ -26,16 +26,20 @@ class DockerDependencyChecker:
         """Internal method to check for required files."""
         config_dir = self.config.get_config_value(self.config_files_dir)
         required_files = self.config.get_config_value(self.required_config_files)
+
+        # No required_files, no check needed
+        if required_files is None or len(required_files) == 0:
+            return
+
         missing_files = []
 
         for file in required_files:
             # Check if the file already starts with config_dir and adjust accordingly
-            if file.startswith(config_dir):
+            if config_dir is None or file.startswith(config_dir):
                 req_file = file
             else:
                 req_file = os.path.join(config_dir, file)
 
-            print(f'{file} : {req_file}')
             if not os.path.isfile(req_file):
                 missing_files.append(file)
 
