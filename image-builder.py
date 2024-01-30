@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 from argparse import ArgumentParser
-import json
 import sys
 from docker_manager.docker_config import DockerConfig
 from docker_manager.docker_container_manager import DockerContainerManager
@@ -38,21 +37,30 @@ def parse_arguments():
 def load_configuration_file(args):
     if args.config:
         try:
-            with open(args.config, 'r') as config_file:
-                config_json = json.load(config_file)
-            config_json['verbose'] = args.verbose
-            config_json['logging'] = args.logging
-            if args.build_image and isinstance(args.build_image, str):
-                config_json['dockerfile'] = args.build_image
-                # Make sure 'required_config_files' is in the JSON
-                req_files = 'required_config_files'
-                if req_files not in config_json:
-                    config_json[req_files] = []
-                # Append 'build_image' to 'required_config_files' if it's not already in the list
-                if args.build_image not in config_json[req_files]:
-                    config_json[req_files].append(args.build_image)
+            config = DockerConfig(args.config)
 
-            return config_json
+            # setup default field names
+            # note, these fields can be None
+            verbose = config.get_default_config_name('verbose')
+            logging_enabled = config.get_default_config_name('logging_enabled')
+            log_file = config.get_default_config_name('log_file')
+            log_level = config.get_default_config_name('log_level')
+            dockerfile = config.get_default_config_name('dockerfile')
+            required_config_files = config.get_default_config_name('required_config_files')
+
+            config.add_custom_value(verbose, args.verbose)
+            config.add_custom_value(logging_enabled, args.logging)
+
+            if args.logging:
+                if isinstance(args.logging, str):
+                    config.add_custom_value(log_file, args.logging)
+
+            if args.build_image and isinstance(args.build_image, str):
+                config.add_custom_value(dockerfile, args.build_image)
+                # Append 'build_image' to 'required_config_files'
+                config.add_custom_value(required_config_files, [args.build_image])
+
+            return config
         except Exception as e:
             raise ValueError(f'Error reading config file: {e}')
 
@@ -72,9 +80,8 @@ def run_tests():
     test_suite.run()
 
 
-def execute_main_logic(args, config_json):
+def execute_main_logic(args, docker_config):
     # init the module
-    docker_config = DockerConfig(config_dict=config_json)
     dependency_checker = DockerDependencyChecker(docker_config)
     dependency_checker.prepare_environment()
 
@@ -99,14 +106,13 @@ def main():
         if args.run_tests:
             run_tests()
         else:
-            config_json = load_configuration_file(args)
-            execute_main_logic(args, config_json)
+            docker_config = load_configuration_file(args)
+            execute_main_logic(args, docker_config)
 
     except Exception as e:
         print(f'Error during Docker operations: {e}')
         sys.exit(EX_FAIL)
 
-    print('Docker build and create script completed')
     sys.exit(EX_OK)
 
 

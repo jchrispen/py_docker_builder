@@ -1,8 +1,67 @@
 {
-  "os_dependencies": ["docker", "service", "date", "git"],
-  "config_files_dir": "config_files",
-  "required_config_files": [],
-  "image_name": "arbitrage-bot",
-  "container_name": "bot",
-  "tag_format": "%Y%m%d-%H%M%S"
+  "custom_fields": {
+    "os_dependencies": ["docker", "service", "date", "git"],
+    "config_files_dir": "config_files",
+    "required_config_files": [],
+    "image_name": "arbitrage-bot",
+    "container_name": "bot",
+    "tag_format": "%Y%m%d-%H%M%S"
+  },
+  "default_fields": {
+    "verbose": {
+      "field_name": "verbose",
+      "default_value": false,
+      "required": true
+    },
+    "log_file": {
+      "field_name": "logging",
+      "default_value": "docker_manager.log",
+      "required": false
+    },
+    "logging_enabled": {
+      "field_name": "logging_enabled",
+      "default_value": false,
+      "required": true
+    },
+    "log_level": {
+      "field_name": "log_level",
+      "default_value": 0,
+      "required": false
+    },
+    "dockerfile": {
+      "field_name": "dockerfile",
+      "default_value": "Dockerfile",
+      "required": true
+    },
+    "required_config_files": {
+      "field_name": "required_config_files",
+      "default_value": [],
+      "required": false
+    },
+    "os_dependencies": {
+      "field_name": "os_dependencies",
+      "default_value": [],
+      "required": false
+    },
+    "config_files_dir": {
+      "field_name": "config_files_dir",
+      "default_value": "./",
+      "required": false
+    },
+    "image_name": {
+      "field_name": "image_name",
+      "default_value": "new-image",
+      "required": true
+    },
+    "container_name": {
+      "field_name": "container_name",
+      "default_value": "new-container",
+      "required": false
+    },
+    "tag_format": {
+      "field_name": "tag_format",
+      "default_value": "%Y%m%d-%H%M%S",
+      "required": true
+    }
+  }
 }
