@@ -123,7 +123,7 @@ The project includes a suite of unit tests to ensure the reliability and correct
 To run the unit tests, execute the `run_unit_tests.py` script from the project root directory:
 
 ```bash
-./docker_test_suite.py
+./test_runner.py
 ```
 
 This script will automatically discover and run all test cases in the `unittest_docker_manager` directory, including tests for Docker configuration, container management, dependency checking, image building, service management, and utility functions.

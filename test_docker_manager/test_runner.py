@@ -9,7 +9,8 @@ from test_docker_manager.test_docker_image_builder import TestDockerImageBuilder
 from test_docker_manager.test_docker_service_manager import TestDockerServiceManager
 from test_docker_manager.test_docker_utility import TestDockerUtility
 
-class DockerTestSuite:
+
+class TestRunner:
     def __init__(self):
         self.suite = unittest.TestSuite()
         self.add_tests()
@@ -25,6 +26,7 @@ class DockerTestSuite:
     def run(self):
         runner = unittest.TextTestRunner()
         runner.run(self.suite)
+
 
 if __name__ == '__main__':
     test_suite = DockerTestSuite()
