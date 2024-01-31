@@ -5,6 +5,7 @@ from unittest.mock import patch, MagicMock
 import json
 import sys
 import os
+
 sys.path.append(os.path.abspath('../'))
 from docker_manager.docker_dependency_checker import DockerDependencyChecker
 
@@ -41,7 +42,7 @@ class TestDockerDependencyChecker(unittest.TestCase):
         mock_which.return_value = None  # Simulate missing dependencies
         with self.assertRaises(Exception) as context:
             self.dependency_checker._check_dependencies()
-        self.assertIn("Missing dependencies", str(context.exception))
+            self.assertIn("Missing dependencies", str(context.exception))
 
     @patch('os.path.isfile')
     def test_check_required_files_all_present(self, mock_isfile):
@@ -55,7 +56,8 @@ class TestDockerDependencyChecker(unittest.TestCase):
         mock_isfile.return_value = False  # Simulate missing files
         with self.assertRaises(Exception) as context:
             self.dependency_checker._check_required_files()
-        self.assertIn("Missing required files", str(context.exception))
+            self.assertIn("Missing required files", str(context.exception))
+
 
 if __name__ == '__main__':
     unittest.main()

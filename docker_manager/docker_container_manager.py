@@ -8,7 +8,6 @@ class DockerContainerManager:
         self.client = docker.from_env()
         self.config = config
         self.default_tag = 'latest'
-        self.log_file_name = config.get_custom_config_name('log_file')
         self.container_name = config.get_custom_config_name('container_name', use_default=True)
 
     def list_containers(self) -> [Container]:

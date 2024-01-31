@@ -7,13 +7,18 @@ class DockerDependencyChecker:
 
     def __init__(self, config):
         self.config = config
-        self.os_dependencies = 'os_dependencies'
-        self.config_files_dir = 'config_files_dir'
-        self.required_config_files = 'required_config_files'
+        self.os_dependencies = config.get_default_config_name('os_dependencies')
+        self.config_files_dir = config.get_default_config_name('config_files_dir')
+        self.required_config_files = config.get_default_config_name('required_config_files')
 
     def _check_dependencies(self):
         """Internal method to check for required dependencies."""
-        dependencies = self.config.get_config_value(self.os_dependencies)
+        dependencies = self.config.get_custom_config_value(self.os_dependencies)
+
+        # No os_dependencies, no check needed
+        if dependencies is None or len(dependencies) == 0:
+            return
+
         missing_dependencies = []
         for dep in dependencies:
             if not shutil.which(dep):  # Using shutil.which to check for command availability
@@ -24,8 +29,8 @@ class DockerDependencyChecker:
 
     def _check_required_files(self):
         """Internal method to check for required files."""
-        config_dir = self.config.get_config_value(self.config_files_dir)
-        required_files = self.config.get_config_value(self.required_config_files)
+        config_dir = self.config.get_custom_config_value(self.config_files_dir)
+        required_files = self.config.get_custom_config_value(self.required_config_files)
 
         # No required_files, no check needed
         if required_files is None or len(required_files) == 0:
@@ -51,6 +56,7 @@ class DockerDependencyChecker:
         try:
             self._check_dependencies()
             self._check_required_files()
+            # ensure the docker service is up and running
             if not DockerServiceManager.is_docker_running():
                 DockerServiceManager.start_docker()
             # Additional setup or checks can go here
