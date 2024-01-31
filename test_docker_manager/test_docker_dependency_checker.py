@@ -8,27 +8,43 @@ import os
 
 sys.path.append(os.path.abspath('../'))
 from docker_manager.docker_dependency_checker import DockerDependencyChecker
+from docker_manager.docker_config import DockerConfig
 
 
 class TestDockerDependencyChecker(unittest.TestCase):
 
     def setUp(self):
-        # Example JSON string for configuration
+        # Test 'valid' JSON string for configuration
         json_config = '''
-        {
-            "os_dependencies": ["docker", "git"],
-            "required_config_files": ["/path/to/required_file1", "/path/to/required_file2"]
-        }
+            {
+                "custom_fields": {
+                    "os_dependencies": ["docker", "service", "date", "git"],
+                    "config_files_dir": "config_files"
+                },
+                "default_fields": {
+                    "logging_enabled": {
+                        "field_name": "logging_enabled",
+                        "default_value": false,
+                        "required": true
+                    },
+                    "required_config_files": {
+                        "field_name": "required_config_files",
+                        "default_value": [],
+                        "required": false
+                    },
+                    "dockerfile": {
+                        "field_name": "dockerfile",
+                        "default_value": "Dockerfile",
+                        "required": true
+                    }
+                }
+            }
         '''
-        # Parse JSON string to dictionary
-        self.mock_config = json.loads(json_config)
 
-        # Set up MagicMock to return values from the dictionary
-        mock_config = MagicMock()
-        mock_config.get_config_value.side_effect = lambda key: self.mock_config.get(key)
-
+        # Create an instance of DockerConfig to use with DockerDependencyChecker
+        docker_config = DockerConfig(config_json=json_config)
         # Create an instance of DockerDependencyChecker with the mocked config
-        self.dependency_checker = DockerDependencyChecker(mock_config)
+        self.dependency_checker = DockerDependencyChecker(docker_config)
 
     @patch('shutil.which')
     def test_check_dependencies_all_present(self, mock_which):
