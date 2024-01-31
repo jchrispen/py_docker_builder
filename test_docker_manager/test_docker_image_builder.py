@@ -1,10 +1,9 @@
-#!/usr/bin/env python3
-
 import unittest
-from unittest.mock import patch, MagicMock
-import json
+from unittest.mock import Mock, patch
+from docker.errors import BuildError
 import sys
 import os
+
 sys.path.append(os.path.abspath('../'))
 from docker_manager.docker_image_builder import DockerImageBuilder
 from docker_manager.docker_utility import DockerUtility
@@ -13,45 +12,48 @@ from docker_manager.docker_utility import DockerUtility
 class TestDockerImageBuilder(unittest.TestCase):
 
     def setUp(self):
-        # Example JSON string for configuration
-        json_config = '''
-        {
-            "log_file_path": "test.log",
-            "dockerfile": "Dockerfile",
-            "image_name": "test_image",
-            "tag_format": "%Y%m%d-%H%M%S"
-        }
-        '''
-        # Parse JSON string to dictionary
-        self.mock_config = json.loads(json_config)
+        self.mock_config = Mock()
+        self.builder = DockerImageBuilder(self.mock_config)
 
-        # Set up MagicMock to return values from the dictionary
-        mock_config = MagicMock()
-        mock_config.get_config_value.side_effect = lambda key: self.mock_config.get(key)
+    @patch('docker.models.images.ImageCollection.list')
+    def test_list_images(self, mock_list):
+        # Setup mock response
+        mock_list.return_value = [Mock(tags=['image1:latest']), Mock(tags=['image2:v1'])]
 
-        # Create an instance of DockerDependencyChecker with the mocked config
-        self.image_builder = DockerImageBuilder(mock_config)
+        # Execute the method
+        self.builder.list_images()
 
+        # Check if the docker list method was called
+        mock_list.assert_called_once()
 
-    @patch('docker_manager.docker_utility.DockerUtility.run_command_with_output')
-    def test_list_images_success(self, mock_run_command):
-        # Test successful listing of Docker images
-        mock_run_command.return_value = None  # Simulate successful command execution
-        self.image_builder.list_images()
-        mock_run_command.assert_called_with("docker images", "Failed to list Docker images.")
+    @patch('docker.models.images.ImageCollection.build')
+    @patch('docker_manager.docker_utility.DockerUtility.create_tag')  # Replace 'your_module' with the actual module name
+    def test_build_image_success(self, mock_create_tag, mock_build):
+        # Setup mocks
+        self.mock_config.get_config_value.side_effect = lambda key: \
+            {'image_name': 'test_image', 'tag_format': 'latest', 'dockerfile': 'Dockerfile'}[key]
+        mock_create_tag.return_value = 'v1'
+        mock_build.return_value = (Mock(), ['Building...'])
 
-    @patch('docker_manager.docker_utility.DockerUtility.run_command_with_output')
-    @patch('docker_manager.docker_utility.DockerUtility.create_tag')
-    def test_build_image_success(self, mock_create_tag, mock_run_command):
-        # Test successful building of a Docker image
-        mock_create_tag.return_value = 'latest'  # Simulate tag creation
-        mock_run_command.return_value = None  # Simulate successful command execution
-        log_file_path = self.mock_config.get("log_file_path")
-        self.image_builder.build_image()
-        expected_command = "docker buildx build --tag test_image:latest --file Dockerfile ."
-        mock_run_command.assert_called_with(expected_command, "Docker build failed.", log_file_path)
+        # Execute the method
+        image_tag = self.builder.build_image()
 
-    # Additional tests can be added for failure scenarios
+        # Asserts
+        self.assertEqual(image_tag, 'test_image:v1')
+        mock_build.assert_called_once_with(path='.', dockerfile='Dockerfile', tag='test_image:v1')
+
+    @patch('docker.models.images.ImageCollection.build')
+    @patch('docker_manager.docker_utility.DockerUtility.create_tag')  # Replace 'your_module' with the actual module name
+    def test_build_image_fail(self, mock_create_tag, mock_build):
+        # Setup mocks
+        self.mock_config.get_config_value.side_effect = lambda key: \
+            {'image_name': 'test_image', 'tag_format': 'latest', 'dockerfile': 'Dockerfile'}[key]
+        mock_create_tag.return_value = 'v1'
+        mock_build.side_effect = BuildError(reason="Build failed", build_log="Error log")
+
+        # Execute the method and assert exception
+        self.assertIsNone(self.builder.build_image())
+
 
 if __name__ == '__main__':
     unittest.main()
