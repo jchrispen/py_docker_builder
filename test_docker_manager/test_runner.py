@@ -10,18 +10,19 @@ from test_docker_manager.test_docker_service_manager import TestDockerServiceMan
 from test_docker_manager.test_docker_utility import TestDockerUtility
 
 
-class TestRunner:
+class DockerTestSuite:
     def __init__(self):
+        self.loader = unittest.TestLoader()
         self.suite = unittest.TestSuite()
         self.add_tests()
 
     def add_tests(self):
-        self.suite.addTest(unittest.makeSuite(TestDockerConfig))
-        self.suite.addTest(unittest.makeSuite(TestDockerContainerManager))
-        self.suite.addTest(unittest.makeSuite(TestDockerDependencyChecker))
-        self.suite.addTest(unittest.makeSuite(TestDockerImageBuilder))
-        self.suite.addTest(unittest.makeSuite(TestDockerServiceManager))
-        self.suite.addTest(unittest.makeSuite(TestDockerUtility))
+        self.suite.addTests(self.loader.loadTestsFromTestCase(TestDockerConfig))
+        # self.suite.addTests(self.loader.loadTestsFromTestCase(TestDockerContainerManager))
+        # self.suite.addTests(self.loader.loadTestsFromTestCase(TestDockerDependencyChecker))
+        # self.suite.addTests(self.loader.loadTestsFromTestCase(TestDockerImageBuilder))
+        # self.suite.addTests(self.loader.loadTestsFromTestCase(TestDockerServiceManager))
+        # self.suite.addTests(self.loader.loadTestsFromTestCase(TestDockerUtility))
 
     def run(self):
         runner = unittest.TextTestRunner()

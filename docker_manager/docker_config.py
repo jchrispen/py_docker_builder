@@ -14,8 +14,10 @@ class DockerConfig:
         else:
             raise ValueError("One of config_path, config_json, or config_dict must be provided")
 
-    @staticmethod
-    def load_config_from_file(config_path: str) -> dict:
+    def print(self):
+        print(json.dumps(self.config, indent=2))
+
+    def load_config_from_file(self, config_path: str) -> dict:
         """Loads configuration from a JSON file."""
         try:
             with open(config_path, 'r') as config_file:
@@ -33,19 +35,12 @@ class DockerConfig:
 
     def get_custom_config_value(self, key: str, use_default: bool = False) -> Any:
         """Gets a specific custom configuration item value."""
-        value = self.config.get('custom_fields', {}).get(key, {}).get('default_value')
+        value = self.config.get('custom_fields', {}).get(key)
         if use_default and value is None:
             value = self.get_default_config_value(key)
         return value
 
-    def get_custom_config_name(self, key: str, use_default: bool = False) -> Any:
-        """Gets a specific custom configuration item name."""
-        value = self.config.get('custom_fields', {}).get(key, {}).get('field_name')
-        if use_default and value is None:
-            value = self.get_default_config_name(key)
-        return value
-
-    def add_custom_value(self, key: str, value: Union[str, list]) -> None:
+    def add_custom_value(self, key: str, value: Union[str, list, bool]) -> None:
         """Adds a custom value to the configuration. Handles both single and multiple values."""
         custom_fields = 'custom_fields'
         if custom_fields not in self.config:
@@ -54,12 +49,13 @@ class DockerConfig:
         if isinstance(value, list):
             # Check if the key exists and its value is a list
             if key in self.config[custom_fields] and isinstance(self.config[custom_fields][key], list):
-                # Append to the existing list if value is not already in the list
-                if value not in self.config[custom_fields][key]:
-                    self.config[custom_fields][key].append(value)
+                # Append individual elements of the input list that are not already in the existing list
+                for item in value:
+                    if item not in self.config[custom_fields][key]:
+                        self.config[custom_fields][key].append(item)
             else:
-                # Set the value for the key (as a list if it's not already a list)
+                # Set the value for the key as the input list
                 self.config[custom_fields][key] = value
-        else: # it's a str
-            # Set the value for the key
+        else:  # it's a str or bool
+            # Set the value for the key as the input string
             self.config[custom_fields][key] = value

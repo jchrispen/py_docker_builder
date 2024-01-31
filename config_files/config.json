@@ -2,10 +2,8 @@
   "custom_fields": {
     "os_dependencies": ["docker", "service", "date", "git"],
     "config_files_dir": "config_files",
-    "required_config_files": [],
     "image_name": "arbitrage-bot",
-    "container_name": "bot",
-    "tag_format": "%Y%m%d-%H%M%S"
+    "container_name": "bot"
   },
   "default_fields": {
     "verbose": {

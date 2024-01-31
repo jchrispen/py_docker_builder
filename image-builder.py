@@ -6,7 +6,7 @@ from docker_manager.docker_config import DockerConfig
 from docker_manager.docker_container_manager import DockerContainerManager
 from docker_manager.docker_dependency_checker import DockerDependencyChecker
 from docker_manager.docker_image_builder import DockerImageBuilder
-from test_docker_manager.test_runner import TestRunner
+from test_docker_manager.test_runner import DockerTestSuite
 
 
 class BuilderArgumentParser:
@@ -44,7 +44,6 @@ def load_configuration_file(args):
             verbose = config.get_default_config_name('verbose')
             logging_enabled = config.get_default_config_name('logging_enabled')
             log_file = config.get_default_config_name('log_file')
-            log_level = config.get_default_config_name('log_level')
             dockerfile = config.get_default_config_name('dockerfile')
             required_config_files = config.get_default_config_name('required_config_files')
 
@@ -60,6 +59,7 @@ def load_configuration_file(args):
                 # Append 'build_image' to 'required_config_files'
                 config.add_custom_value(required_config_files, [args.build_image])
 
+            config.print()
             return config
         except Exception as e:
             raise ValueError(f'Error reading config file: {e}')
@@ -76,7 +76,7 @@ def create_container(image_name_tag, docker_config):
 
 
 def run_tests():
-    test_suite = TestRunner()
+    test_suite = DockerTestSuite()
     test_suite.run()
 
 
