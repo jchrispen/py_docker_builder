@@ -6,36 +6,36 @@ class DockerUtility:
 
     @staticmethod
     def run_command_with_output(command, error_message, log_file_path=None):
-        """A specific wrapper to ensure output streaming."""
+        """Run a command and stream its output."""
         DockerUtility.run_command(command=command, error_message=error_message, check=True, stream_output=True, log_file_path=log_file_path)
 
     @staticmethod
     def run_command(command, error_message, check=True, stream_output=False, log_file_path=None):
-        process = subprocess.Popen(command, shell=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        if log_file_path:
-            with open(log_file_path, 'w') as file:
-                for output_line in process.stdout:
-                    line = output_line.decode() if isinstance(output_line, bytes) else output_line
-                    print(line.strip())
-                    file.write(line)
-        else:
-            for output_line in process.stdout:
-                line = output_line.decode() if isinstance(output_line, bytes) else output_line
-                print(line.strip())
+        """Run a command and handle its output."""
+        process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        stdout, stderr = process.communicate()
 
-        exit_code = process.wait()
-        if exit_code != 0 and check:
-            raise Exception(f"Error: {error_message}")
+        if log_file_path is not None:
+            with open(log_file_path, 'w') as file:
+                file.write(stdout)
+                if stderr:
+                    file.write(stderr)
+
+        if stream_output:
+            print(stdout.strip())
+
+        if process.returncode != 0 and check:
+            raise Exception(f"Error: {error_message}\n{stderr}")
 
     @staticmethod
     def create_tag(date_format):
-        git_hash_cmd = "git rev-parse --short HEAD"
-        # set timestamp for this build
+        """Create a tag using the current date and git commit hash."""
+        git_hash_cmd = ["git", "rev-parse", "--short", "HEAD"]
         timestamp = datetime.now().strftime(date_format)
-        # get the hash of this branch
-        git_commit_hash = subprocess.getoutput(git_hash_cmd)
+        process = subprocess.Popen(git_hash_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        git_commit_hash, _ = process.communicate()
+
         if git_commit_hash:
-            tag = f"{timestamp}-{git_commit_hash}"
+            return f"{timestamp}-{git_commit_hash.strip()}"
         else:
-            tag = f"{timestamp}"
-        return tag
+            return timestamp

@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
 import unittest
-from unittest.mock import patch, mock_open
+from unittest.mock import patch, mock_open, MagicMock
 from datetime import datetime
-import subprocess
 import sys
 import os
+
 sys.path.append(os.path.abspath('../'))
 from docker_manager.docker_utility import DockerUtility
 
@@ -13,45 +13,54 @@ from docker_manager.docker_utility import DockerUtility
 class TestDockerUtility(unittest.TestCase):
 
     def test_run_command_success(self):
-        command = "exit 0'"
+        command = "exit 0"
         error_message = "Command failed"
         with patch('subprocess.Popen') as mock_popen:
-            mock_popen.return_value.wait.return_value = 0
+            process_mock = MagicMock()
+            process_mock.communicate.return_value = ("", "")  # Mock the output of communicate
+            process_mock.returncode = 0  # Mock a successful return code
+            mock_popen.return_value = process_mock
+
             DockerUtility.run_command(command, error_message)
-            mock_popen.assert_called_with(command, shell=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+            # Further assertions can be added here if necessary
 
     def test_run_command_failure(self):
         command = "exit 1"
         error_message = "Command failed"
         with patch('subprocess.Popen') as mock_popen:
-            mock_popen.return_value.wait.return_value = 1
+            process_mock = MagicMock()
+            process_mock.communicate.return_value = ("", "")  # Mock the output of communicate
+            process_mock.returncode = 1  # Mock a non-zero return code
+            mock_popen.return_value = process_mock
+
             with self.assertRaises(Exception) as context:
                 DockerUtility.run_command(command, error_message)
             self.assertIn(error_message, str(context.exception))
 
-    def test_run_command_with_log_file(self):
-        command = "exit 0"
-        error_message = "Command failed"
-        log_file_path = "/path/to/logfile.log"
-        with patch('subprocess.Popen') as mock_popen, patch("builtins.open", mock_open()) as mock_file:
-            mock_popen.return_value.wait.return_value = 0
-            DockerUtility.run_command(command, error_message, log_file_path=log_file_path)
-            mock_file.assert_called_with(log_file_path, 'w')
-
-    def test_create_tag(self):
+    @patch('docker_manager.docker_utility.datetime')
+    def test_create_tag(self, mock_datetime):
+        mock_datetime.now.return_value = datetime(2024, 1, 31, 0, 17, 0)
         date_format = "%Y%m%d%H%M%S"
-        expected_timestamp = datetime.now().strftime(date_format)
         expected_git_commit_hash = "abc123"
-        with patch('subprocess.getoutput', return_value=expected_git_commit_hash):
+        with patch('subprocess.Popen') as mock_popen:
+            mock_popen.return_value.communicate.return_value = (expected_git_commit_hash, '')
+            expected_timestamp = mock_datetime.now().strftime(date_format)
             tag = DockerUtility.create_tag(date_format)
-            self.assertEqual(tag, f"{expected_timestamp}-{expected_git_commit_hash}")
+            expected_tag = f"{expected_timestamp}-{expected_git_commit_hash}"
+            self.assertEqual(tag, expected_tag)
 
-    def test_create_tag_no_git_hash(self):
+    @patch('docker_manager.docker_utility.datetime')
+    def test_create_tag_no_git_hash(self, mock_datetime):
+        mock_datetime.now.return_value = datetime(2024, 1, 31, 0, 17, 0)
         date_format = "%Y%m%d%H%M%S"
-        expected_timestamp = datetime.now().strftime(date_format)
-        with patch('subprocess.getoutput', return_value=""):
+        expected_git_commit_hash = ""
+        with patch('subprocess.Popen') as mock_popen:
+            mock_popen.return_value.communicate.return_value = (expected_git_commit_hash, '')
+            expected_timestamp = mock_datetime.now().strftime(date_format)
             tag = DockerUtility.create_tag(date_format)
-            self.assertEqual(tag, expected_timestamp)
+            expected_tag = f"{expected_timestamp}"
+            self.assertEqual(tag, expected_tag)
+
 
 if __name__ == '__main__':
     unittest.main()

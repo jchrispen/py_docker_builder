@@ -59,7 +59,6 @@ def load_configuration_file(args):
                 # Append 'build_image' to 'required_config_files'
                 config.add_custom_value(required_config_files, [args.build_image])
 
-            config.print()
             return config
         except Exception as e:
             raise ValueError(f'Error reading config file: {e}')
