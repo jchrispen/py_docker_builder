@@ -8,8 +8,8 @@ class DockerContainerManager:
         self.client = docker.from_env()
         self.config = config
         self.default_tag = 'latest'
-        self.log_file_name = 'log_file_path'
-        self.container_name = 'container_name'
+        self.log_file_name = config.get_custom_config_name('log_file')
+        self.container_name = config.get_custom_config_name('container_name', use_default=True)
 
     def list_containers(self) -> [Container]:
         """List Docker containers."""
@@ -28,7 +28,7 @@ class DockerContainerManager:
             name = image_name_tag
             tag = self.default_tag  # Default tag if not specified
 
-        container_name = self.config.get_config_value(self.container_name)
+        container_name = self.config.get_custom_config_value(self.container_name, use_default=True)
         container_name_tag = f"{container_name}-{tag}"
 
         try:

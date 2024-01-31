@@ -3,7 +3,6 @@
 import unittest
 from unittest.mock import patch, MagicMock
 from docker.models.containers import Container
-from docker.errors import DockerException
 import sys
 import os
 
@@ -16,8 +15,12 @@ class TestDockerContainerManager(unittest.TestCase):
     def setUp(self):
         # Mock configuration for DockerContainerManager
         mock_config = MagicMock()
-        mock_config.get_config_value.side_effect = lambda key: {'log_file_path': 'test.log',
-                                                                'container_name': 'test_container'}.get(key)
+        mock_config.get_custom_config_name.side_effect = lambda key, use_default=False: {'log_file': 'test.log',
+                                                                                         'container_name': 'custom_container'}.get(
+            key, 'test_container' if use_default else None)
+        mock_config.get_custom_config_value.side_effect = lambda key, use_default=False: {'log_file': 'test.log',
+                                                                                          'container_name': 'custom_container'}.get(
+            key, 'test_container' if use_default else None)
         self.docker_container_manager = DockerContainerManager(mock_config)
 
     @patch('docker.DockerClient.containers')
