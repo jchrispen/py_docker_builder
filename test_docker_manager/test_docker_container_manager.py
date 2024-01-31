@@ -2,8 +2,11 @@
 
 import unittest
 from unittest.mock import patch, MagicMock
+from docker.models.containers import Container
+from docker.errors import DockerException
 import sys
 import os
+
 sys.path.append(os.path.abspath('../'))
 from docker_manager.docker_container_manager import DockerContainerManager
 
@@ -13,25 +16,28 @@ class TestDockerContainerManager(unittest.TestCase):
     def setUp(self):
         # Mock configuration for DockerContainerManager
         mock_config = MagicMock()
-        mock_config.get_config_value.side_effect = lambda key: {'log_file_path': 'test.log', 'container_name': 'test_container'}.get(key)
+        mock_config.get_config_value.side_effect = lambda key: {'log_file_path': 'test.log',
+                                                                'container_name': 'test_container'}.get(key)
         self.docker_container_manager = DockerContainerManager(mock_config)
 
-    @patch('docker_manager.docker_utility.DockerUtility.run_command_with_output')
-    def test_list_containers_success(self, mock_run_command):
+    @patch('docker.DockerClient.containers')
+    def test_list_containers_success(self, mock_containers):
         # Test successful listing of Docker containers
-        mock_run_command.return_value = None  # Simulate successful command execution
-        self.docker_container_manager.list_containers()
-        mock_run_command.assert_called_with("docker ps -a", "Failed to list Docker containers.")
+        mock_containers.list.return_value = [MagicMock(spec=Container)]
+        containers = self.docker_container_manager.list_containers()
+        self.assertTrue(len(containers) > 0)
+        mock_containers.list.assert_called_with(all=True)
 
-    @patch('docker_manager.docker_utility.DockerUtility.run_command_with_output')
-    def test_create_container_success(self, mock_run_command):
+    @patch('docker.DockerClient.containers')
+    def test_create_container_success(self, mock_containers):
         # Test successful creation of a Docker container
-        mock_run_command.return_value = None  # Simulate successful command execution
-        self.docker_container_manager.create_container('image_name:tag')
-        expected_command = "docker create -it --name test_container-tag image_name:tag"
-        mock_run_command.assert_called_with(expected_command, "Failed to create Docker container.", 'test.log')
+        mock_containers.create.return_value = MagicMock(spec=Container)
+        container = self.docker_container_manager.create_container('image_name:tag')
+        self.assertIsInstance(container, Container)
+        mock_containers.create.assert_called_with('image_name:tag', name='test_container-tag', detach=True, tty=True)
 
     # Additional tests can be added for failure scenarios and edge cases
+
 
 if __name__ == '__main__':
     unittest.main()
