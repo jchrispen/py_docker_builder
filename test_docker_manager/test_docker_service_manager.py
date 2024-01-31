@@ -2,31 +2,34 @@
 
 import unittest
 from unittest.mock import patch, MagicMock
+from docker.errors import APIError
 import sys
 import os
+
 sys.path.append(os.path.abspath('../'))
 from docker_manager.docker_service_manager import DockerServiceManager
 
 
 class TestDockerServiceManager(unittest.TestCase):
 
-    @patch('subprocess.Popen')
-    def test_is_docker_running_true(self, mock_popen):
+    @patch('docker.DockerClient.ping')
+    @patch('docker.from_env')
+    def test_is_docker_running_true(self, mock_from_env, mock_ping):
         # Test detection of Docker running
-        process_mock = MagicMock()
-        attrs = {'communicate.return_value': ('docker is running', ''), 'returncode': 0}
-        process_mock.configure_mock(**attrs)
-        mock_popen.return_value = process_mock
+        mock_client = MagicMock()
+        mock_from_env.return_value = mock_client
+        mock_ping.return_value = None  # ping succeeds without raising an exception
 
         self.assertTrue(DockerServiceManager.is_docker_running())
 
-    @patch('subprocess.Popen')
-    def test_is_docker_running_false(self, mock_popen):
-        # Test detection of Docker not running
-        process_mock = MagicMock()
-        attrs = {'communicate.return_value': ('docker is not running', ''), 'returncode': 1}
-        process_mock.configure_mock(**attrs)
-        mock_popen.return_value = process_mock
+    @patch('docker.from_env')
+    def test_is_docker_running_false(self, mock_from_env):
+        # Create a mock Docker client
+        mock_client = MagicMock()
+        mock_from_env.return_value = mock_client
+
+        # Set the ping method to raise an APIError
+        mock_client.ping.side_effect = APIError("Docker daemon not running")
 
         self.assertFalse(DockerServiceManager.is_docker_running())
 
@@ -40,9 +43,9 @@ class TestDockerServiceManager(unittest.TestCase):
     def test_start_docker_failure(self, mock_run):
         # Test failure in starting Docker service
         mock_run.return_value = MagicMock(returncode=1, stderr='Error')
-        with self.assertRaises(Exception) as context:
-            DockerServiceManager.start_docker()
-        self.assertIn("Failed to start Docker", str(context.exception))
+        self.assertFalse(DockerServiceManager.start_docker())
+
+
 
 if __name__ == '__main__':
     unittest.main()

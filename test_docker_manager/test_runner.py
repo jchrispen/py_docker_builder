@@ -21,7 +21,7 @@ class DockerTestSuite:
         self.suite.addTests(self.loader.loadTestsFromTestCase(TestDockerContainerManager))
         self.suite.addTests(self.loader.loadTestsFromTestCase(TestDockerDependencyChecker))
         self.suite.addTests(self.loader.loadTestsFromTestCase(TestDockerImageBuilder))
-        # self.suite.addTests(self.loader.loadTestsFromTestCase(TestDockerServiceManager))
+        self.suite.addTests(self.loader.loadTestsFromTestCase(TestDockerServiceManager))
         # self.suite.addTests(self.loader.loadTestsFromTestCase(TestDockerUtility))
 
     def run(self):
