@@ -1,20 +1,33 @@
 import logging
 import os
 import sys
+import json
 
 
 class DockerLogging:
     """Handles logging to file and or stdout"""
     def __init__(self, docker_config):
         self.config = docker_config
-        self.config.print()
-
         self.log_file_path = self.config.get_custom_config_value('log_file', use_default=True)
         self.log_level = self.config.get_custom_config_value('log_level', use_default=True)
         self.log_enabled = self.config.get_custom_config_value('logging_enabled', use_default=True)
         self.verbose_enabled = self.config.get_custom_config_value('verbose', use_default=True)
+        self.initializer = self.config.get_custom_config_value('initializer', use_default=True)
         self.logger = None
         self.setup_logging()
+        # let logging begin
+        self.log(f'DockerLogging initialized by {self.initializer}')
+        if self.verbose_enabled:
+            self.log('verbose enabled')
+        else:
+            self.log('verbose not enabled')
+
+        if self.log_enabled:
+            self.log('log enabled')
+        else:
+            self.log('log not enabled')
+        json_config = json.dumps(self.config.config, indent=2)
+        self.log(json_config)
 
     def setup_logging(self):
         if os.path.dirname(self.log_file_path) != '':
@@ -31,6 +44,7 @@ class DockerLogging:
         # Define a mapping of logging levels to corresponding print actions
         action = {
             logging.DEBUG: lambda msg: print(msg),
+            logging.INFO: lambda msg: print(msg),
             logging.WARNING: lambda msg: print(msg),
             logging.ERROR: lambda msg: print(msg, file=sys.stderr)
         }.get(level, lambda msg: print(msg, file=sys.stderr))  # Default action

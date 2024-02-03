@@ -31,6 +31,9 @@ class TestDockerImageBuilder(unittest.TestCase):
         # Apply the mock function as a side effect
         self.mock_config.get_custom_config_value.side_effect = mock_get_custom_config_value
 
+        # Ensure `.config` returns a serializable object
+        self.mock_config.config = self.test_config
+
         # Now, this mock behavior will be used for initializing DockerImageBuilder
         self.builder = DockerImageBuilder(self.mock_config)
 

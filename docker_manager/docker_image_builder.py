@@ -9,6 +9,8 @@ import docker
 class DockerImageBuilder:
     def __init__(self, docker_config):
         self.config = docker_config
+        # let the logger know it's us
+        self.config.add_custom_value('initializer', __class__.__name__)
         self.logging = DockerLogging(docker_config)
 
     def list_images(self):
