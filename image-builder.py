@@ -56,7 +56,6 @@ def load_configuration_file(args):
 
             if args.build_image and isinstance(args.build_image, str):
                 config.add_custom_value(dockerfile, args.build_image)
-                # Append 'build_image' to 'required_config_files'
                 config.add_custom_value(required_config_files, [args.build_image])
 
             return config

@@ -8,58 +8,51 @@
   "default_fields": {
     "verbose": {
       "field_name": "verbose",
-      "default_value": false,
-      "required": true
+      "default_value": false
     },
     "log_file": {
       "field_name": "logging",
-      "default_value": "docker_manager.log",
-      "required": false
+      "default_value": "docker_manager.log"
     },
     "logging_enabled": {
       "field_name": "logging_enabled",
-      "default_value": false,
-      "required": true
+      "default_value": false
     },
     "log_level": {
       "field_name": "log_level",
-      "default_value": 0,
-      "required": false
+      "default_value": 0
     },
     "dockerfile": {
       "field_name": "dockerfile",
-      "default_value": "Dockerfile",
-      "required": true
+      "default_value": "Dockerfile"
     },
     "required_config_files": {
       "field_name": "required_config_files",
-      "default_value": [],
-      "required": false
+      "default_value": []
     },
     "os_dependencies": {
       "field_name": "os_dependencies",
-      "default_value": [],
-      "required": false
+      "default_value": []
     },
     "config_files_dir": {
       "field_name": "config_files_dir",
-      "default_value": "./",
-      "required": false
+      "default_value": "./"
     },
     "image_name": {
       "field_name": "image_name",
-      "default_value": "new-image",
-      "required": true
+      "default_value": "new-image"
     },
     "container_name": {
       "field_name": "container_name",
-      "default_value": "new-container",
-      "required": false
+      "default_value": "new-container"
     },
     "tag_format": {
       "field_name": "tag_format",
-      "default_value": "%Y%m%d-%H%M%S",
-      "required": true
+      "default_value": "%Y%m%d-%H%M%S"
+    },
+        "initializer": {
+      "field_name": "initializer",
+      "default_value": "unknown"
     }
   }
 }

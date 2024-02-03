@@ -30,6 +30,9 @@ class DockerLogging:
         self.log(json_config)
 
     def setup_logging(self):
+        if not self.log_enabled:
+            return
+
         if os.path.dirname(self.log_file_path) != '':
             if not os.path.exists(os.path.dirname(self.log_file_path)):
                 os.makedirs(os.path.dirname(self.log_file_path))
@@ -38,7 +41,7 @@ class DockerLogging:
         self.logger = logging.getLogger(__name__)
 
     def print_message(self, message, level):
-        if not self.log_enabled:
+        if not self.verbose_enabled:
             return
 
         # Define a mapping of logging levels to corresponding print actions
@@ -53,7 +56,7 @@ class DockerLogging:
         action(message)
 
     def log_message(self, message, level):
-        if not self.verbose_enabled:
+        if not self.log_enabled:
             return
 
         # Define a mapping of logging levels to corresponding log actions
@@ -67,5 +70,5 @@ class DockerLogging:
         action(message)
 
     def log(self, message, level=logging.INFO):
-        self.log_message(message, level)
         self.print_message(message, level)
+        self.log_message(message, level)
