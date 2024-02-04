@@ -3,7 +3,11 @@
     "os_dependencies": ["docker", "service", "date", "git"],
     "config_files_dir": "config_files",
     "image_name": "arbitrage-bot",
-    "container_name": "bot"
+    "container_name": "bot",
+    "buildargs": {
+                  "base_image": "ubuntu",
+                  "base_version": "20.04"
+                 }
   },
   "default_fields": {
     "verbose": {

@@ -1,7 +1,6 @@
 import logging
 import os
 import sys
-import json
 
 
 class DockerLogging:
@@ -26,8 +25,8 @@ class DockerLogging:
             self.log('log enabled')
         else:
             self.log('log not enabled')
-        json_config = json.dumps(self.config.config, indent=2)
-        self.log(json_config)
+        # json_config = json.dumps(self.config.config, indent=2)
+        # self.log(json_config)
 
     def setup_logging(self):
         if not self.log_enabled:

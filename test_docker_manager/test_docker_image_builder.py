@@ -17,11 +17,13 @@ class TestDockerImageBuilder(unittest.TestCase):
         self.test_config = {
             'image_name': 'test_image',
             'tag_format': 'latest',
-            'dockerfile': 'Dockerfile',
+            'dockerfile': 'Dockerfile.test',
+            'config_files_dir': 'config_files',
             'logging_enabled': False,
-            'verbose': False,
+            'verbose': True,
             'log_file': 'test_log.txt',
-            'log_level': logging.DEBUG
+            'log_level': logging.DEBUG,
+            'initializer': 'unit_testing'
         }
 
         # Define the mock function within setUp

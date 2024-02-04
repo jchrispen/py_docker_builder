@@ -44,6 +44,7 @@ def load_configuration_file(args):
             verbose = config.get_default_config_name('verbose')
             logging_enabled = config.get_default_config_name('logging_enabled')
             log_file = config.get_default_config_name('log_file')
+            # config_files_dir = config.get_default_config_name('config_files_dir')
             dockerfile = config.get_default_config_name('dockerfile')
             required_config_files = config.get_default_config_name('required_config_files')
 
@@ -56,7 +57,7 @@ def load_configuration_file(args):
 
             if args.build_image and isinstance(args.build_image, str):
                 config.add_custom_value(dockerfile, args.build_image)
-                config.add_custom_value(required_config_files, [args.build_image])
+                # config.add_custom_value(required_config_files, [args.build_image])
 
             return config
         except Exception as e:
