@@ -1,9 +1,6 @@
 #*-------------------------------------------------------------------
-# This script creates a docker container and initalizes the
-# arbitrage-bot so that it can be run in a containerd space.
-#
-# The docker image builds on the python:<version>-slim image and
-# installs Node.js and the git repo for the bot project.
+# This script creates a basic test docker image.
+# The docker image builds on the ubuntu:latest image.
 #*-------------------------------------------------------------------
 
 
