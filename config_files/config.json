@@ -6,7 +6,7 @@
     "container_name": "bot",
     "buildargs": {
                   "base_image": "ubuntu",
-                  "base_version": "20.04"
+                  "base_version": "22.04"
                  }
   },
   "default_fields": {
@@ -54,7 +54,7 @@
       "field_name": "tag_format",
       "default_value": "%Y%m%d-%H%M%S"
     },
-        "initializer": {
+    "initializer": {
       "field_name": "initializer",
       "default_value": "unknown"
     }

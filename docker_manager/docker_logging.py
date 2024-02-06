@@ -16,17 +16,6 @@ class DockerLogging:
         self.setup_logging()
         # let logging begin
         self.log(f'DockerLogging initialized by {self.initializer}')
-        if self.verbose_enabled:
-            self.log('verbose enabled')
-        else:
-            self.log('verbose not enabled')
-
-        if self.log_enabled:
-            self.log('log enabled')
-        else:
-            self.log('log not enabled')
-        # json_config = json.dumps(self.config.config, indent=2)
-        # self.log(json_config)
 
     def setup_logging(self):
         if not self.log_enabled:

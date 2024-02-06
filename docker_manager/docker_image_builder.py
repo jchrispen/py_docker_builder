@@ -34,11 +34,9 @@ class DockerImageBuilder:
             dockerfile = self.config.get_custom_config_value('dockerfile', use_default=True)
             config_files_dir = self.config.get_custom_config_value('config_files_dir', use_default=True)
             image_build_path = os.path.join(os.getcwd(), config_files_dir)
+            dockerfile_full_path = os.path.join(image_build_path, dockerfile)
             # Configure variables used in the Dockerfile
-            ubuntu_buildargs = {
-                'base_image': 'ubuntu',
-                'base_version': '20.04'
-            }
+            ubuntu_buildargs = self.config.get_custom_config_value('buildargs', use_default=True)
 
             # Validate image name and tag
             if not image_name or '/' in image_name or not image_tag:
@@ -46,6 +44,7 @@ class DockerImageBuilder:
 
             image_name_tag = f"{image_name}:{image_tag}"
             self.logging.log(f"Building image with name:tag {image_name_tag}")
+            self.logging.log(f"Building image with Dockerfile: {dockerfile_full_path}")
 
             '''
             def build(self, path=None, tag=None, quiet=False, fileobj=None,

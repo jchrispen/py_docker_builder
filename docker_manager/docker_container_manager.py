@@ -2,13 +2,18 @@ from docker.models.containers import Container
 from docker.errors import DockerException
 import docker
 
+from docker_manager.docker_logging import DockerLogging
+
 
 class DockerContainerManager:
     def __init__(self, config):
         self.client = docker.from_env()
         self.config = config
         self.default_tag = 'latest'
-        self.container_name = config.get_custom_config_name('container_name', use_default=True)
+        self.container_name = config.get_custom_config_value('container_name', use_default=True)
+        # let the logger know it's us
+        self.config.add_custom_value('initializer', __class__.__name__)
+        self.logger = DockerLogging(config)
 
     def list_containers(self) -> [Container]:
         """List Docker containers."""
@@ -27,11 +32,13 @@ class DockerContainerManager:
             name = image_name_tag
             tag = self.default_tag  # Default tag if not specified
 
-        container_name = self.config.get_custom_config_value(self.container_name, use_default=True)
-        container_name_tag = f"{container_name}-{tag}"
+        # container_name = self.config.get_custom_config_value(self.container_name, use_default=True)
+        container_name_tag = f"{self.container_name}-{tag}"
+
+        self.logger.log(f"{container_name_tag}")
 
         try:
             return self.client.containers.create(image_name_tag, name=container_name_tag, detach=True, tty=True)
         except DockerException as e:
-            print(f"Failed to create Docker container: {e}")
+            self.logger.log(f"Failed to create Docker container: {e}")
             return None

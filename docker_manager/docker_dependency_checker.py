@@ -2,6 +2,8 @@ import os
 import shutil
 from docker_manager.docker_service_manager import DockerServiceManager
 
+from docker_manager.docker_logging import DockerLogging
+
 
 class DockerDependencyChecker:
 
@@ -10,6 +12,9 @@ class DockerDependencyChecker:
         self.os_dependencies = config.get_default_config_name('os_dependencies')
         self.config_files_dir = config.get_default_config_name('config_files_dir')
         self.required_config_files = config.get_default_config_name('required_config_files')
+        # let the logger know it's us
+        self.config.add_custom_value('initializer', __class__.__name__)
+        self.logging = DockerLogging(config)
 
     def _check_dependencies(self):
         """Internal method to check for required dependencies."""
