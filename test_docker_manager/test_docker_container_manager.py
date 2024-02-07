@@ -21,7 +21,7 @@ class TestDockerContainerManager(unittest.TestCase):
             'dockerfile': 'Dockerfile.test',
             'config_files_dir': 'config_files',
             'logging_enabled': False,
-            'verbose': True,
+            'verbose': False,
             'log_file': 'test_log.txt',
             'log_level': logging.DEBUG,
             'initializer': 'unit_testing'

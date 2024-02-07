@@ -25,7 +25,7 @@ class TestDockerConfig(unittest.TestCase):
                 "verbose": {
                     "field_name": "verbose",
                     "default_value": False,
-                    "required": True
+                    "required": False
                 },
                 "log_file": {
                     "field_name": "logging",
