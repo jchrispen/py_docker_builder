@@ -4,7 +4,7 @@ Welcome to the `Image Builder` repository, where we aim to demystify basic arbit
 
 ## Table of Contents
 1. [Overview](#overview)
-2. [Quick Start](#quick-start) `./build_and_create.py --config './config_file' --build-image`
+2. [Quick Start](#quick-start) `./image_builder.py --config-file './config_file' --build-image`
 3. [Setup](#setup)
     - [Building the Docker Image](#building-the-docker-image)
     - [Configuration](#configuration)
@@ -37,18 +37,21 @@ Instructions on how to run the project, including commands and any necessary arg
 
 ```bash
 ./image-builder.py --help
-usage: image-builder.py [-h] -c CONFIG [-v] [-l] [--build-image] [--create-container]
+usage: image-builder.py [-h] [-c CONFIG_FILE] [-v] [-l] [-b [BUILD_IMAGE]] [-cc] [-t]
 
-Arbitrage-Bot Docker Management Script
+Docker Management Script
 
 optional arguments:
   -h, --help            show this help message and exit
-  -c CONFIG, --config CONFIG
+  -c CONFIG_FILE, --config-file CONFIG_FILE
                         Path to the configuration file
   -v, --verbose         Enable output
   -l, --logging         Enable logging
-  --build-image         Build Docker image
-  --create-container    Create Docker container
+  -b [BUILD_IMAGE], --build-image [BUILD_IMAGE]
+                        Build Docker image, optionally specify a Dockerfile path
+  -cc, --create-container
+                        Create Docker container
+  -t, --run-tests       Run unit tests
   ```
 ## File Structure
 ```

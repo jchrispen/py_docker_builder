@@ -16,7 +16,7 @@ class BuilderArgumentParser:
         self._setup_arguments()
 
     def _setup_arguments(self):
-        self.parser.add_argument('-c', '--config', help='Path to the configuration file')
+        self.parser.add_argument('-c', '--config-file', help='Path to the configuration file')
         self.parser.add_argument('-v', '--verbose', action='store_true', help='Enable output')
         self.parser.add_argument('-l', '--logging', action='store_true', help='Enable logging')
         self.parser.add_argument('-b', '--build-image', nargs='?', const='Dockerfile',
@@ -35,9 +35,9 @@ def parse_arguments():
 
 
 def load_configuration_file(args):
-    if args.config:
+    if args.config_file:
         try:
-            config = DockerConfig(args.config)
+            config = DockerConfig(args.config_file)
 
             # setup default field names
             # note, these fields can be None
@@ -97,7 +97,7 @@ def main():
     EX_FAIL = 1
 
     # Check if --config is provided when --run-tests is not flagged
-    if not args.run_tests and not args.config:
+    if not args.run_tests and not args.config_file:
         print('Error: --config is required if not running tests')
         sys.exit(EX_FAIL)
 
