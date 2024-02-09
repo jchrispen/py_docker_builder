@@ -15,6 +15,8 @@ class DockerLogging:
         self.logger = None
         self.setup_logging()
         # let logging begin
+        if self.initializer.startswith('TestDocker'):
+                self.log('')
         self.log(f'DockerLogging initialized by {self.initializer}')
 
     def setup_logging(self):

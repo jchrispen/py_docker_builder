@@ -5,6 +5,8 @@ import json
 import sys
 import os
 
+from docker_manager.docker_logging import DockerLogging
+
 sys.path.append(os.path.abspath('../'))
 from docker_manager.docker_config import DockerConfig
 
@@ -19,7 +21,10 @@ class TestDockerConfig(unittest.TestCase):
                 "os_dependencies": ["docker", "service", "date", "git"],
                 "config_files_dir": "config_files",
                 "image_name": "arbitrage-bot",
-                "container_name": "bot"
+                "container_name": "bot",
+                "initializer": __class__.__name__,
+                "verbose": True,
+                "logging": False
             },
             "default_fields": {
                 "verbose": {
@@ -38,11 +43,16 @@ class TestDockerConfig(unittest.TestCase):
         with open(self.mock_config_path, 'w') as mock_config_file:
             json.dump(self.mock_config, mock_config_file)
 
+        self.docker_config = DockerConfig(config_dict=self.mock_config)
+        self.logger = DockerLogging(self.docker_config)
+
     def tearDown(self):
         # Clean up the mock configuration file
         os.remove(self.mock_config_path)
 
     def test_instantiation_methods(self):
+        self.logger.log(f'TEST: {self.test_instantiation_methods.__name__}')
+
         # Instantiate with file path
         config_from_file = DockerConfig(self.mock_config_path)
         self.assertEqual(config_from_file.config, self.mock_config)
@@ -56,6 +66,8 @@ class TestDockerConfig(unittest.TestCase):
         self.assertEqual(config_from_json.config, self.mock_config)
 
     def test_load_config_success(self):
+        self.logger.log(f'TEST: {self.test_load_config_success.__name__}')
+
         # Test successful loading of configuration
         docker_config = DockerConfig(self.mock_config_path)
 
@@ -67,6 +79,8 @@ class TestDockerConfig(unittest.TestCase):
             self.assertEqual(docker_config.config[key], self.mock_config[key])
 
     def test_load_config_failure(self):
+        self.logger.log(f'TEST: {self.test_load_config_failure.__name__}')
+
         # Test failure to load configuration from a non-existent file
         with self.assertRaises(ValueError) as context:
             DockerConfig('non_existent_config.json')
@@ -79,6 +93,8 @@ class TestDockerConfig(unittest.TestCase):
         self.assertTrue(expected_error in error_message or expected_alt_error in error_message)
 
     def test_get_default_config_value(self):
+        self.logger.log(f'TEST: {self.test_get_default_config_value.__name__}')
+
         docker_config = DockerConfig(self.mock_config_path)
 
         # Assuming 'verbose' has a default value of False in default_fields
@@ -90,6 +106,8 @@ class TestDockerConfig(unittest.TestCase):
         self.assertIsNone(non_existent_value)
 
     def test_get_default_config_name(self):
+        self.logger.log(f'TEST: {self.test_get_default_config_name.__name__}')
+
         docker_config = DockerConfig(self.mock_config_path)
 
         test_value = docker_config.get_default_config_name('log_file')
@@ -100,6 +118,8 @@ class TestDockerConfig(unittest.TestCase):
         self.assertIsNone(non_existent_value)
 
     def test_get_custom_config_value(self):
+        self.logger.log(f'TEST: {self.test_get_custom_config_value.__name__}')
+
         docker_config = DockerConfig(config_dict=self.mock_config)
 
         # Test retrieving an existing custom value
@@ -115,6 +135,8 @@ class TestDockerConfig(unittest.TestCase):
         self.assertIsNone(docker_config.get_custom_config_value('non_existent_key', use_default=True))
 
     def test_add_config_value(self):
+        self.logger.log(f'TEST: {self.test_add_config_value.__name__}')
+
         docker_config = DockerConfig(self.mock_config_path)
 
         # Set a new value
@@ -126,6 +148,8 @@ class TestDockerConfig(unittest.TestCase):
         self.assertEqual(docker_config.get_custom_config_value('container_name'), 'new_bot')
 
     def test_add_different_custom_values(self):
+        self.logger.log(f'TEST: {self.test_add_different_custom_values.__name__}')
+
         docker_config = DockerConfig(config_dict=self.mock_config)
 
         # Add string value

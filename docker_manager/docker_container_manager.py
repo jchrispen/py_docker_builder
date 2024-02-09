@@ -35,7 +35,7 @@ class DockerContainerManager:
         # container_name = self.config.get_custom_config_value(self.container_name, use_default=True)
         container_name_tag = f"{self.container_name}-{tag}"
 
-        self.logger.log(f"{container_name_tag}")
+        self.logger.log(f'Building container named {container_name_tag}')
 
         try:
             return self.client.containers.create(image_name_tag, name=container_name_tag, detach=True, tty=True)
