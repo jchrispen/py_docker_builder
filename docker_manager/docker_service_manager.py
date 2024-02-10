@@ -2,6 +2,7 @@ import subprocess
 import docker
 from docker.errors import APIError
 
+
 class DockerServiceManager:
 
     @staticmethod
@@ -22,5 +23,6 @@ class DockerServiceManager:
         # The Docker SDK for Python doesn't provide a direct method to start the Docker service.
         # This operation typically requires system-level permissions and is usually done outside
         # the scope of a Docker client application.
-        result = subprocess.run(['sudo', 'service', 'docker', 'start'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        result = subprocess.run(['sudo', 'service', 'docker', 'start'], stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                text=True)
         return result.returncode == 0
