@@ -9,6 +9,11 @@ from docker_manager.docker_image_builder import DockerImageBuilder
 from test_docker_manager.test_runner import DockerTestSuite
 
 
+# define constants
+EX_OK = 0
+EX_FAIL = 1
+
+
 class BuilderArgumentParser:
     def __init__(self):
         _description = 'Docker Management Script'
@@ -44,9 +49,7 @@ def load_configuration_file(args):
             verbose = config.get_default_config_name('verbose')
             logging_enabled = config.get_default_config_name('logging_enabled')
             log_file = config.get_default_config_name('log_file')
-            # config_files_dir = config.get_default_config_name('config_files_dir')
             dockerfile = config.get_default_config_name('dockerfile')
-            required_config_files = config.get_default_config_name('required_config_files')
 
             config.add_custom_value(verbose, args.verbose)
             config.add_custom_value(logging_enabled, args.logging)
@@ -81,8 +84,12 @@ def run_tests():
 
 def execute_main_logic(args, docker_config):
     # init the module
-    dependency_checker = DockerDependencyChecker(docker_config)
-    dependency_checker.prepare_environment()
+    try:
+        dependency_checker = DockerDependencyChecker(docker_config)
+        dependency_checker.prepare_environment()
+    except (ImportError, FileNotFoundError) as e:
+        print(f"An error occurred: {e}")
+        sys.exit(EX_FAIL)
 
     image_name_tag = None
     if args.build_image or args.create_container:
@@ -93,8 +100,6 @@ def execute_main_logic(args, docker_config):
 
 def main():
     args = parse_arguments()
-    EX_OK = 0
-    EX_FAIL = 1
 
     # Check if --config is provided when --run-tests is not flagged
     if not args.run_tests and not args.config_file:

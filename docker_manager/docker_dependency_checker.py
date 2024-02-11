@@ -30,7 +30,7 @@ class DockerDependencyChecker:
                 missing_dependencies.append(dep)
 
         if missing_dependencies:
-            raise Exception(f"Missing dependencies: {', '.join(missing_dependencies)}")
+            raise ImportError(f"Missing dependencies: {', '.join(missing_dependencies)}")
 
     def _check_required_files(self):
         """Internal method to check for required files."""
