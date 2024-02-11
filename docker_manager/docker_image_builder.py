@@ -32,9 +32,7 @@ class DockerImageBuilder:
             # Assuming create_tag is a method that creates a tag based on the given format
             image_tag = DockerUtility.create_tag(tag_format)
             dockerfile = self.config.get_custom_config_value('dockerfile', use_default=True)
-            config_files_dir = self.config.get_custom_config_value('config_files_dir', use_default=True)
-            image_build_path = os.path.join(os.getcwd(), config_files_dir)
-            dockerfile_full_path = os.path.join(image_build_path, dockerfile)
+            image_build_path = os.getcwd()
             # Configure variables used in the Dockerfile
             ubuntu_buildargs = self.config.get_custom_config_value('buildargs', use_default=True)
 
@@ -44,7 +42,7 @@ class DockerImageBuilder:
 
             image_name_tag = f"{image_name}:{image_tag}"
             self.logging.log(f"Building image with name:tag {image_name_tag}")
-            self.logging.log(f"Building image with Dockerfile: {dockerfile_full_path}")
+            self.logging.log(f"Building image with Dockerfile: {dockerfile}")
 
             '''
             def build(self, path=None, tag=None, quiet=False, fileobj=None,
