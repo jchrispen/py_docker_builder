@@ -3,14 +3,10 @@
 # The docker image builds on the ubuntu:latest image.
 #*-------------------------------------------------------------------
 
-
 #*-------------------------------------------------------------------
-# Stage 0: setup variables for this project
-
-# Construct variables based on ARGs defined above
-ARG base_image=ubuntu \
-    base_version=latest
-
+# Stage 0: Define ARGs outside of a build stage to parameterize the base image
+ARG base_image=ubuntu
+ARG base_version=latest
 
 #*-------------------------------------------------------------------
 # Stage 1: Final image
@@ -20,6 +16,5 @@ FROM ${base_image}:${base_version}
 # Set the default command to execute
 # when creating a new container
 CMD ["bash"]
-
 #*-------------------------------------------------------------------
 # End Stage(s)

@@ -1,5 +1,5 @@
 #*-------------------------------------------------------------------
-# This script creates a docker container and initalizes the
+# This script creates a docker container and initializes the
 # arbitrage-bot so that it can be run in a containerd space.
 #
 # The docker image builds on the python:<version>-slim image and
@@ -10,15 +10,15 @@
 # Stage 0: setup variables for this project
 
 # Set base image, directories, and versions in a compact manner
-ARG PYTHON_MAJOR_VERSION=3.12 \
-    PYTHON_MINOR_VERSION=.1 \
-    NODE_VERSION=21.6.0 \
-    NPM_VERSION=10.3.0 \
-    BOT_URL="https://github.com/Innovation-Web-3-0-Blockchain/Arbitrage-Bot.git" \
-    BASE_IMAGE_NAME=python \
-    LOCAL_DIR=/usr/local \
-    BUILD_DIR=/opt/builder \
-    BASE_PACKAGES=" \
+ARG PYTHON_MAJOR_VERSION=3.12
+ARG PYTHON_MINOR_VERSION=.1
+ARG NODE_VERSION=21.6.0
+ARG NPM_VERSION=10.3.0
+ARG BOT_URL="https://github.com/Innovation-Web-3-0-Blockchain/Arbitrage-Bot.git"
+ARG BASE_IMAGE_NAME=python
+ARG LOCAL_DIR=/usr/local
+ARG BUILD_DIR=/opt/builder
+ARG BASE_PACKAGES=" \
         speedtest-cli \
         git \
         nano \
@@ -28,15 +28,15 @@ ARG PYTHON_MAJOR_VERSION=3.12 \
         xz-utils"
 
 # Construct variables based on ARGs defined above
-ARG BASE_IMAGE_VERSION=${PYTHON_MAJOR_VERSION}-slim \
-    BASE_IMAGE=${BASE_IMAGE_NAME}:${BASE_IMAGE_VERSION} \
-    PYTHON_VERSION=${PYTHON_MAJOR_VERSION}${PYTHON_MINOR_VERSION} \
-    NODE_DIR=node-v${NODE_VERSION}-linux-x64 \
-    NODE_TARBALL=${NODE_DIR}.tar.xz \
-    NODE_SOURCE=${BUILD_DIR}/${NODE_TARBALL} \
-    NODE_PATH=${LOCAL_DIR}/${NODE_DIR} \
-    NODE_URL=https://nodejs.org/dist/v${NODE_VERSION}/${NODE_TARBALL} \
-    BOT_DIR=${LOCAL_DIR}/arbitrage-bot
+ARG BASE_IMAGE_VERSION=${PYTHON_MAJOR_VERSION}-slim
+ARG BASE_IMAGE=${BASE_IMAGE_NAME}:${BASE_IMAGE_VERSION}
+ARG PYTHON_VERSION=${PYTHON_MAJOR_VERSION}${PYTHON_MINOR_VERSION}
+ARG NODE_DIR=node-v${NODE_VERSION}-linux-x64
+ARG NODE_TARBALL=${NODE_DIR}.tar.xz
+ARG NODE_SOURCE=${BUILD_DIR}/${NODE_TARBALL}
+ARG NODE_PATH=${LOCAL_DIR}/${NODE_DIR}
+ARG NODE_URL=https://nodejs.org/dist/v${NODE_VERSION}/${NODE_TARBALL}
+ARG BOT_DIR=${LOCAL_DIR}/arbitrage-bot
 
 
 #*-------------------------------------------------------------------
