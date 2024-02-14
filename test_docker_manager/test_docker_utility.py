@@ -27,7 +27,7 @@ class TestDockerUtility(BaseTest):
 
             DockerUtility.run_command(command, error_message)
             self._ppass(message='returns success return code',
-                        test_name=self._get_current_function_name())
+                        test_name=self._get_function_name())
 
     def test_run_command_failure(self):
         command = "exit 1"
@@ -41,7 +41,7 @@ class TestDockerUtility(BaseTest):
             with self.assertRaises(Exception) as context:
                 DockerUtility.run_command(command, error_message)
             self._ppass(message='raises error',
-                        test_name=self._get_current_function_name())
+                        test_name=self._get_function_name())
             self.assertIn(error_message, str(context.exception))
             self._ppass(message='raises expected error message')
 
@@ -57,7 +57,7 @@ class TestDockerUtility(BaseTest):
             expected_tag = f"{expected_timestamp}-{expected_git_commit_hash}"
             self.assertEqual(tag, expected_tag)
         self._ppass(message='expected tag with git hash created',
-                    test_name=self._get_current_function_name())
+                    test_name=self._get_function_name())
 
     @patch('docker_manager.docker_utility.datetime')
     def test_create_tag_no_git_hash(self, mock_datetime):
@@ -71,7 +71,7 @@ class TestDockerUtility(BaseTest):
             expected_tag = f"{expected_timestamp}"
             self.assertEqual(tag, expected_tag)
         self._ppass(message='expected tag created',
-                    test_name=self._get_current_function_name())
+                    test_name=self._get_function_name())
 
 
 if __name__ == '__main__':

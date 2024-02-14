@@ -1,0 +1,45 @@
+#*-------------------------------------------------------------------
+# This script creates a basic test docker image.
+# The docker image builds on the ubuntu:latest image.
+#*-------------------------------------------------------------------
+
+#*-------------------------------------------------------------------
+# Stage 1: Node.js base
+FROM node:alpine AS node_base
+# Ensure we're using the latest version of the base image
+RUN apk update && apk upgrade \
+    && npm install -g npm@latest
+
+# Optionally, install node packages here
+
+
+#*-------------------------------------------------------------------
+# Stage 2: Python base
+FROM python:3.12-alpine AS python_base
+# Ensure we're using the latest version of the base image
+RUN apk update && apk upgrade
+# Install any additional packages or perform setup for Python here
+RUN pip3 install --upgrade pip
+
+
+#*-------------------------------------------------------------------
+# Stage 3: Final image
+FROM alpine:latest
+# Set the working directory
+WORKDIR /usr/local
+# Copy Node.js from the node_base stage
+COPY --from=node_base /usr/local/bin /usr/local/bin
+COPY --from=node_base /usr/local/lib /usr/local/lib
+# Copy Python from the python_base stage
+COPY --from=python_base /usr/local /usr/local
+# Update the links and cache for the shared libraries
+RUN apk update \
+    && apk --no-cache upgrade \
+    && apk add --no-cache libstdc++ libgcc git \
+    && ldconfig /usr/local/lib \
+    && cd /usr/local \
+    && git clone "https://github.com/Innovation-Web-3-0-Blockchain/Arbitrage-Bot.git" arbitrage-bot
+
+
+#*-------------------------------------------------------------------
+# End Stage(s)

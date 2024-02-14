@@ -32,7 +32,7 @@ class TestDockerContainerManager(BaseTest):
         self._ppass('list returns values')
         mock_containers.list.assert_called_with(all=True)
         self._ppass(message='properly called with arguments',
-                    test_name=self._get_current_function_name())
+                    test_name=self._get_function_name())
 
     @patch('docker.DockerClient.containers')
     def test_create_container_success(self, mock_containers):
@@ -43,7 +43,7 @@ class TestDockerContainerManager(BaseTest):
 
         self.assertIsInstance(container, Container)
         self._ppass(message='returns container object',
-                    test_name=self._get_current_function_name())
+                    test_name=self._get_function_name())
         mock_containers.create.assert_called_with('image_name:tag', name='test_container-tag', detach=True, tty=True)
         self._ppass(message='properly called with arguments')
 

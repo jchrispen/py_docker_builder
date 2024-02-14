@@ -1,15 +1,25 @@
 import unittest
 import logging
-import inspect
+import sys
+from enum import IntEnum
 
 from docker_manager.docker_config import DockerConfig
 from docker_manager.docker_logging import DockerLogging
 
 
 class BaseTest(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()  # ensure proper initialization
+        # function name enum
+        cls.current = 0
+        cls.parent = 1
+        cls.grand_parent = 2
+        cls.great_grand_parent = 3
+        # end enum
+
     def setUp(self, initializer=None):
         super().setUp()  # ensure proper initialization
-        #
         config_dict = \
             {
                 "custom_fields": {
@@ -30,6 +40,10 @@ class BaseTest(unittest.TestCase):
         self.docker_config = DockerConfig(config_dict=config_dict)
         self.logger = DockerLogging(self.docker_config)
 
+    @classmethod
+    def tearDownClass(cls):
+        super().tearDownClass()  # ensure proper clean up
+
     def tearDown(self):
         super().tearDown()  # ensure proper clean up
 
@@ -40,20 +54,8 @@ class BaseTest(unittest.TestCase):
             self.logger.log(message)
         self.logger.log('PASS')
 
-    def _get_current_function_name(self) -> str:
-        """Returns the name of the current function."""
-        # f_back goes one step back in the stack to the caller of this method
-        # f_code contains code object information about the frame
-        # co_name gives the name of the code object, which in this case is the caller's name
-        return inspect.currentframe().f_back.f_code.co_name
-
-    def _get_caller_function_name(self) -> str:
-        """Returns the name of the caller function."""
-        # f_back goes one step back in the stack to the caller of this method
-        # f_back goes one step back in the stack to the caller of previous method
-        # f_code contains code object information about the frame
-        # co_name gives the name of the code object, which in this case is the caller's name
-        return inspect.currentframe().f_back.f_back.f_code.co_name
+    def _get_function_name(self, generation: int = 0) -> str:
+        return sys._getframe(generation + 1).f_code.co_name
 
     @classmethod
     def _get_current_class_name(cls):

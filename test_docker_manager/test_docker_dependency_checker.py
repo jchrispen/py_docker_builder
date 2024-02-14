@@ -28,7 +28,7 @@ class TestDockerDependencyChecker(BaseTest):
         mock_which.side_effect = lambda x: '/usr/bin/' + x  # Simulate all dependencies are found
         self.dependency_checker._check_dependencies()  # This should not raise an exception
         self._ppass(message='does not raise error for dependencies',
-                    test_name=self._get_current_function_name())
+                    test_name=self._get_function_name())
 
     @patch('shutil.which')
     def test_check_dependencies_missing(self, mock_which):
@@ -38,7 +38,7 @@ class TestDockerDependencyChecker(BaseTest):
             self.dependency_checker._check_dependencies()
             self.assertIn("Missing dependencies", str(context.exception))
         self._ppass(message='properly raises error for missing dependencies',
-                    test_name=self._get_current_function_name())
+                    test_name=self._get_function_name())
 
     @patch('os.path.isfile')
     def test_check_required_files_all_present(self, mock_isfile):
@@ -46,7 +46,7 @@ class TestDockerDependencyChecker(BaseTest):
         mock_isfile.return_value = True  # Simulate all files exist
         self.dependency_checker._check_required_files()  # This should not raise an exception
         self._ppass(message='does not raise error',
-                    test_name=self._get_current_function_name())
+                    test_name=self._get_function_name())
 
     @patch('os.path.isfile')
     def test_check_required_files_missing(self, mock_isfile):
@@ -56,7 +56,7 @@ class TestDockerDependencyChecker(BaseTest):
             self.dependency_checker._check_required_files()
             self.assertIn("Missing required files", str(context.exception))
         self._ppass(message='properly raises error',
-                    test_name=self._get_current_function_name())
+                    test_name=self._get_function_name())
 
 
 if __name__ == '__main__':

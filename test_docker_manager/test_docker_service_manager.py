@@ -26,7 +26,7 @@ class TestDockerServiceManager(BaseTest):
 
         self.assertTrue(DockerServiceManager.is_docker_running())
         self._ppass(message='ping succeeds',
-                    test_name=self._get_current_function_name())
+                    test_name=self._get_function_name())
 
     @patch('docker.from_env')
     def test_is_docker_running_false(self, mock_from_env):
@@ -39,7 +39,7 @@ class TestDockerServiceManager(BaseTest):
 
         self.assertFalse(DockerServiceManager.is_docker_running())
         self._ppass(message='ping fails',
-                    test_name=self._get_current_function_name())
+                    test_name=self._get_function_name())
 
     @patch('subprocess.run')
     def test_start_docker_success(self, mock_run):
@@ -47,7 +47,7 @@ class TestDockerServiceManager(BaseTest):
         mock_run.return_value = MagicMock(returncode=0)
         self.assertTrue(DockerServiceManager.start_docker())
         self._ppass(message='service starts',
-                    test_name=self._get_current_function_name())
+                    test_name=self._get_function_name())
 
     @patch('subprocess.run')
     def test_start_docker_failure(self, mock_run):
@@ -55,7 +55,7 @@ class TestDockerServiceManager(BaseTest):
         mock_run.return_value = MagicMock(returncode=1, stderr='Error')
         self.assertFalse(DockerServiceManager.start_docker())
         self._ppass(message='fails to start',
-                    test_name=self._get_current_function_name())
+                    test_name=self._get_function_name())
 
 
 if __name__ == '__main__':

@@ -25,18 +25,15 @@ class DockerImageBuilder:
             return None
 
     def build_image(self):
-        """Build a Docker image using configuration settings."""
+        """Build a Docker image using configuration settings and stream logs to console."""
         try:
             image_name = self.config.get_custom_config_value('image_name', use_default=True)
             tag_format = self.config.get_custom_config_value('tag_format', use_default=True)
-            # Assuming create_tag is a method that creates a tag based on the given format
             image_tag = DockerUtility.create_tag(tag_format)
             dockerfile = self.config.get_custom_config_value('dockerfile', use_default=True)
             image_build_path = os.getcwd()
-            # Configure variables used in the Dockerfile
             ubuntu_buildargs = self.config.get_custom_config_value('buildargs', use_default=True)
 
-            # Validate image name and tag
             if not image_name or '/' in image_name or not image_tag:
                 raise ValueError("Invalid image name or tag format.")
 
@@ -44,27 +41,24 @@ class DockerImageBuilder:
             self.logging.log(f"Building image with name:tag {image_name_tag}")
             self.logging.log(f"Building image with Dockerfile: {dockerfile}")
 
-            '''
-            def build(self, path=None, tag=None, quiet=False, fileobj=None,
-                      nocache=False, rm=False, timeout=None,
-                      custom_context=False, encoding=None, pull=False,
-                      forcerm=False, dockerfile=None, container_limits=None,
-                      decode=False, buildargs=None, gzip=False, shmsize=None,
-                      labels=None, cache_from=None, target=None, network_mode=None,
-                      squash=None, extra_hosts=None, platform=None, isolation=None,
-                      use_config_proxy=True):
-            '''
-            # Build the docker image
             client = docker.from_env()
-            image, build_logs, *rest = client.images.build(path=image_build_path,
-                                                           dockerfile=dockerfile,
-                                                           tag=image_name_tag,
-                                                           buildargs=ubuntu_buildargs,
-                                                           squash=False)
+            # Note: No 'decode' attribute is manually accessed here.
+            # The 'decode=True' argument ensures the build logs are automatically decoded.
+            _, build_logs = client.images.build(path=image_build_path,
+                                                tag=f"{image_name}:{image_tag}",
+                                                dockerfile=dockerfile,
+                                                rm=True,
+                                                buildargs=ubuntu_buildargs)
 
-            # display and or log the build logs
-            for line in build_logs:
-                self.logging.log(line)
+            # Process and print build logs in real-time
+            for log_entry in build_logs:  # Iterate through the generator of log entries
+                if 'stream' in log_entry:
+                    log_line = log_entry['stream'].strip()
+                    self.logging.log(log_line)
+                elif 'error' in log_entry:  # Handling potential error messages in the logs
+                    error_message = log_entry['error'].strip()
+                    self.logging.log(error_message, level=logging.ERROR)
+                    break  # Exit loop on error to stop processing further logs
 
             self.logging.log(f"Successfully built {image_name_tag}")
             return image_name_tag

@@ -32,7 +32,7 @@ class TestDockerImageBuilder(BaseTest):
         # Check if the docker list method was called
         mock_list.assert_called_once()
         self._ppass(message='method called',
-                    test_name=self._get_current_function_name())
+                    test_name=self._get_function_name())
 
     @patch('docker_manager.docker_image_builder.DockerUtility.create_tag', return_value="test_success")
     @patch('docker_manager.docker_image_builder.docker.from_env')
@@ -51,7 +51,7 @@ class TestDockerImageBuilder(BaseTest):
         # Assert the expected result
         self.assertEqual(result, expected_image_name_tag)
         self._ppass(message='returns expected image:tag',
-                    test_name=self._get_current_function_name())
+                    test_name=self._get_function_name())
 
     @patch('docker_manager.docker_image_builder.DockerUtility.create_tag', return_value="test_build_error")
     @patch('docker_manager.docker_image_builder.docker')
@@ -62,7 +62,7 @@ class TestDockerImageBuilder(BaseTest):
         # Call the method and assert None is returned
         self.assertIsNone(self.builder.build_image())
         self._ppass(message='returns None on build error',
-                    test_name=self._get_current_function_name())
+                    test_name=self._get_function_name())
 
     @patch('docker_manager.docker_image_builder.DockerUtility.create_tag', return_value="test_api_error")
     @patch('docker_manager.docker_image_builder.docker')
@@ -73,7 +73,7 @@ class TestDockerImageBuilder(BaseTest):
         # Call the method and assert None is returned
         self.assertIsNone(self.builder.build_image())
         self._ppass(message='returns None on api error',
-                    test_name=self._get_current_function_name())
+                    test_name=self._get_function_name())
 
 
 if __name__ == '__main__':
