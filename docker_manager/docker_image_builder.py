@@ -60,6 +60,11 @@ class DockerImageBuilder:
                     self.logging.log(error_message, level=logging.ERROR)
                     break  # Exit loop on error to stop processing further logs
 
+            # Prune dangling images
+            pruned = client.images.prune(filters={'dangling': True})
+            # Output the amount of reclaimed space
+            self.logging.log(f"Reclaimed space: {pruned['SpaceReclaimed']} bytes")
+
             self.logging.log(f"Successfully built {image_name_tag}")
             return image_name_tag
         except BuildError as e:
